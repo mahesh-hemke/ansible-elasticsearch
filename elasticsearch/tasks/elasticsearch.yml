@@ -5,8 +5,8 @@
   with_items:
     - elasticsearch
     - java-21-openjdk
+    - python3-cryptography
   when: ansible_hostname[0:3]|lower == 'ela'
-
 
 - name: Install kibana and filebeat
   yum:
@@ -16,3 +16,15 @@
     - kibana 
     - filebeat
   when: ansible_hostname[8:14]|lower == 'node-1'
+
+- name: Modifying elasticsearch.yml file on both node
+  template:
+    src: templates/elasticsearch3.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  when: ansible_hostname[8:14]|lower == 'node-3'
+
+- name: Modifying elasticsearch.yml file on both node
+  template:
+    src: templates/elasticsearch4.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  when: ansible_hostname[8:14]|lower == 'node-3'

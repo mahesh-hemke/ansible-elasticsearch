@@ -1,2 +1,16 @@
 ---
 # defaults file for elasticsearch
+cluster_name: dev-cluster
+elastic_port: 9200
+
+http_keystore: /etc/elasticsearch/certs/http.p12
+transport_keystore: certs/elastic-certificates.p12
+transport_truststore: certs/elastic-stack-ca.p12
+
+http_host: 0.0.0.0
+transport_host: 0.0.0.0
+
+elastic_pass: 7rt*5-+gyppFzyaEeDSV
+
+certs_dir: /etc/elasticsearch/certs
+ca: /etc/elasticsearch/certs/ca/
