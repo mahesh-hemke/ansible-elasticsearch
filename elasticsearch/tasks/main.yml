@@ -5,6 +5,6 @@
 - include_tasks: elasticsearch.yml
 - include_tasks: ssl-certificate_node-1.yml
   when: ansible_hostname[8:14]|lower == 'node-5'
-- include_tasks: ssl-certificate_node-1.yml
+- include_tasks: ssl-certificate_node-2.yml
   when: ansible_hostname[8:14]|lower == 'node-6'
 

@@ -4,7 +4,7 @@
     state: stop
   ignore_errors: true
 
-- name: Multiple questions with responses
+- name: Generate a CA certificate using the provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
     echo: true
