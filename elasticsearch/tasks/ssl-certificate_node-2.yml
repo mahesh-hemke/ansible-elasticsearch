@@ -21,7 +21,7 @@
 - name: Service stop
   service:
     name: elasticsearch 
-    state: stop
+    state: stopped
 
 ### Generate a new certificate for the transport layer
 - name: Import the newly created CA certificate into the Elasticsearch truststore - Node-2
