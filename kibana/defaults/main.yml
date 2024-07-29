@@ -6,5 +6,6 @@ kibana_ca: /etc/kibana/client-ca.cer
 
 kibana_user: kibana_system
 kibana_pass: 7rt*5-+gyppFzyaEeDSV
+cert_pass: 7rt*5-+gyppFzyaEeDSV
 
 certs_dir: /etc/elasticsearch/certs

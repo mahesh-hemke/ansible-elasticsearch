@@ -32,7 +32,7 @@
     command: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys  > {{ kibana_cert }}
     echo: true
     responses:
-      'Enter Import Password(.*)': '{{ elastic_pass }}'
+      'Enter Import Password(.*)': '{{ cert_pass }}'
   ignore_errors: true
 
 - name: Creating a ca cert for Kibana
@@ -40,7 +40,7 @@
     command: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain > {{ kibana_ca }}
     echo: true
     responses:
-      'Enter Import Password(.*)': '{{ elastic_pass }}'
+      'Enter Import Password(.*)': '{{ cert_pass }}'
   ignore_errors: true
 
 - name: Kibana service stop
