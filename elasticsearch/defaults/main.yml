@@ -14,4 +14,4 @@ transport_host: 0.0.0.0
 elastic_pass: 7rt*5-+gyppFzyaEeDSV
 
 certs_dir: /etc/elasticsearch/certs
-ca: /etc/elasticsearch/certs/ca/
+ca: /etc/elasticsearch/certs/ca
