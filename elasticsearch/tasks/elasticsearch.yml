@@ -1,0 +1,18 @@
+- name: Install Elasticsearch
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - elasticsearch
+    - java-21-openjdk
+  when: ansible_hostname[0:3]|lower == 'ela'
+
+
+- name: Install kibana and filebeat
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - kibana 
+    - filebeat
+  when: ansible_hostname[8:14]|lower == 'node-1'

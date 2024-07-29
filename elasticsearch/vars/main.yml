@@ -1,0 +1,8 @@
+---
+# vars file for elasticsearch
+node_1: elastic-node-1
+node_2: elastic-node-2
+node_1_ip: 10.142.0.11
+node_2_ip: 10.142.0.10
+
+

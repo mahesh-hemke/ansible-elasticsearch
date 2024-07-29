@@ -1,0 +1,7 @@
+- name: Deployment of elasticsearch
+  hosts: all
+  become: yes
+  gather_facts: true
+  remote_user: mahesh_hemke24
+  roles:
+    - elasticsearch
