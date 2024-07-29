@@ -1,55 +1,37 @@
-- name: Multiple questions with responses
-  ansible.builtin.expect:
-    command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
-    echo: true
-    responses:
-      'Please enter the desired output file(.*)': ''
+- name: Creating cert directory on node-2
+  ansible.builtin.file:
+    path: '{{ ca }}'
+    state: directory
+    owner: root
+    group: elasticsearch
+    mode: 755
 
-- name: Copy elastic-stack-ca.zip file to certs directory
+- name: Copy cert file from node-1 to node-2
   ansible.builtin.copy:
-    src: /usr/share/elasticsearch/elastic-stack-ca.zip
-    dest: '{{ certs_dir }}/elastic-stack-ca.zip'
+    src: '/home/mahesh_hemke24/{{ item.src }}'
+    dest: '{{ ca }}/caa.crt'
     owner: root
     group: elasticsearch
     mode: '644'
+  with_item:
+    - { src: caa.crt , dest: '{{ ca }}/caa.crt' }
+    - { src: caa.key , dest: '{{ ca }}/caa.key' }
+    - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
 
-- name: Unarchive a elastic-stack-ca.zip file
-  ansible.builtin.unarchive:
-    src: '{{ certs_dir }}/elastic-stack-ca.zip'
-    dest: '{{ certs_dir }}'
-    remote_src: yes
-
-- name: Create v3.ext file
-  copy:
-    content: "subjectAltName=DNS:elastic-node*,IP:10.142.0.12,IP:10.142.0.13"
-    dest: '{{ certs_dir }}/v3.ext'
-
-- name: Run a command using a templated variable (always use quote filter to avoid injection)
-  ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-1" -extfile {{ certs_dir }}/v3.ext
-
-
-### This step ensures that your cluster trusts the new CA certificate.
-- name: Import the newly created CA certificate into the Elasticsearch truststore
-  ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
-
+- name: Service stop
+  service:
+    name: elasticsearch 
+    state: stop
 
 ### Generate a new certificate for the transport layer
-- name: Import the newly created CA certificate into the Elasticsearch truststore
+- name: Import the newly created CA certificate into the Elasticsearch truststore - Node-2
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
     echo: true
     responses:
-      'Please enter the desired output file(.*)': ''
+      'Please enter the desired output file(.*)': '{{ els_cert }}'
       'Enter password for(.*)': '{{ elastic_pass }}'
-
-- name: Copy elastic-certificates.p12 file to certs directory
-  ansible.builtin.copy:
-    src: /usr/share/elasticsearch/elastic-certificates.p12
-    dest: '{{ certs_dir }}/elastic-certificates.p12'
-    owner: root
-    group: elasticsearch
-    mode: '644'
-
+      
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -57,7 +39,6 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
-    - xpack.security.http.ssl.keystore.secure_password
 
 - name: Add the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
@@ -66,4 +47,3 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
-    - xpack.security.http.ssl.keystore.secure_password

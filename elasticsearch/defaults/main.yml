@@ -7,6 +7,7 @@ http_keystore: /etc/elasticsearch/certs/http.p12
 transport_keystore: certs/elastic-certificates.p12
 transport_truststore: certs/elastic-stack-ca.p12
 
+els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
 http_host: 0.0.0.0
 transport_host: 0.0.0.0
 
