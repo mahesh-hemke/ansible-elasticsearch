@@ -4,4 +4,4 @@
 - include_tasks: etchosts.yml
 - include_tasks: elasticsearch.yml
 - include_tasks: ssl-certificate.yml
-  when: ansible_hostname[8:14]|lower == 'node-3'
+  when: ansible_hostname[8:14]|lower == 'node-5'

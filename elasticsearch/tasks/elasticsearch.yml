@@ -6,7 +6,25 @@
     - elasticsearch
     - java-21-openjdk
     - python3-cryptography
+    - expect
+    - unzip
   when: ansible_hostname[0:3]|lower == 'ela'
+
+- name: service start
+  service:
+    name: elasticsearch 
+    state: started
+  ignore_errors: true
+
+- name: Creating cert directory
+  ansible.builtin.file:
+    path: '{{ certs_dir }}'
+    state: directory
+
+- name: Install pexpect package
+  ansible.builtin.pip:
+    name: pexpect
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Install kibana and filebeat
   yum:
@@ -15,16 +33,22 @@
   with_items:
     - kibana 
     - filebeat
-  when: ansible_hostname[8:14]|lower == 'node-1'
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Modifying elasticsearch.yml file on both node
   template:
     src: templates/elasticsearch3.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
-  when: ansible_hostname[8:14]|lower == 'node-3'
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Modifying elasticsearch.yml file on both node
   template:
     src: templates/elasticsearch4.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
-  when: ansible_hostname[8:14]|lower == 'node-3'
+  when: ansible_hostname[8:14]|lower == 'node-6'
+
+- name: service restart
+  service:
+    name: elasticsearch
+    state: restarted
+  ignore_errors: true
