@@ -19,10 +19,25 @@
   ignore_errors: true
 
 - name: Creating a key for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes  > {{ kibana_key }}
+  ansible.builtin.expect:
+    command: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes  > {{ kibana_key }}
+    echo: true
+    responses:
+      'Enter Import Password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
 
 - name: Creating a Cert for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys  > {{ kibana_cert }}
+  ansible.builtin.expect:
+    command: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys  > {{ kibana_cert }}
+    echo: true
+    responses:
+      'Enter Import Password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
 
 - name: Creating a ca cert for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain > {{ kibana_ca }}
+  ansible.builtin.expect:
+    command: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain > {{ kibana_ca }}
+    echo: true
+    responses:
+      'Enter Import Password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
