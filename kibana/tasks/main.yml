@@ -1,2 +1,4 @@
 ---
 # tasks file for kibana
+- include_tasks: repo.yml
+- include_tasks: kibana.yml
