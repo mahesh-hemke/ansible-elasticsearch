@@ -4,7 +4,7 @@
     state: directory
     owner: root
     group: elasticsearch
-    mode: 755
+    mode: '750'
 
 - name: Copy cert file from node-1 to node-2
   ansible.builtin.copy:
@@ -12,30 +12,11 @@
     dest: '{{ item.dest }}'
     owner: root
     group: elasticsearch
-    mode: '644'
+    mode: '640'
   with_items:
     - { src: caa.crt , dest: '{{ ca }}/caa.crt' }
     - { src: caa.key , dest: '{{ ca }}/caa.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
-
-##- name: Scp cert file 
-##  shell: sshpass -f templates/pass scp /etc/elasticsearch/certs/{{ item }} mahesh_hemke24@10.142.0.15:/tmp
-##  with_item:
-##    - ca/caa.key
-##    - ca/caa.crt
-##    - elastic-stack-ca.p12
-##
-##- name: Copy cert file from node-1 to node-2
-##  ansible.builtin.copy:
-##    src: '/tmp/{{ item.src }}'
-##    dest: '{{ ca }}/caa.crt'
-##    owner: root
-##    group: elasticsearch
-##    mode: '644'
-##  with_items:
-##    - { src: caa.crt , dest: '{{ ca }}/caa.crt' }
-##    - { src: caa.key , dest: '{{ ca }}/caa.key' }
-##    - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
 
 - name: Service stop
   service:
@@ -57,7 +38,7 @@
     dest: '{{ certs_dir }}/elastic-certificates.p12'
     owner: root
     group: elasticsearch
-    mode: '644'
+    mode: '640'
     remote_src: yes
       
 - name: Remove the existing keystore values for the default transport keystore and truststore

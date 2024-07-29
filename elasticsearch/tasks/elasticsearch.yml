@@ -14,6 +14,7 @@
   service:
     name: elasticsearch 
     state: started
+    enabled: yes
   ignore_errors: true
 
 - name: Creating cert directory
@@ -24,15 +25,6 @@
 - name: Install pexpect package
   ansible.builtin.pip:
     name: pexpect
-
-- name: Install kibana and filebeat
-  yum:
-    name: '{{ item }}'
-    state: present
-  with_items:
-    - kibana 
-    - filebeat
-  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Modifying elasticsearch.yml file on both node
   template:

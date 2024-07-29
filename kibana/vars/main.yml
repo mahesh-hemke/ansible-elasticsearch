@@ -1,2 +1,6 @@
 ---
 # vars file for kibana
+node_1: elastic-node-5
+node_2: elastic-node-6
+node_1_ip: 10.142.0.15
+node_2_ip: 10.142.0.16

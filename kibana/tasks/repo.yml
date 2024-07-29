@@ -1,17 +1,5 @@
-- name: Creating repo for elasticsearch
-  template:
-    src: templates/elasticsearch_repo.j2
-    dest: /etc/yum.repos.d/elasticsearch.repo
-  when: ansible_hostname[0:4]|lower == 'elas'
-
 - name: Creating repo for kibana
   template:
     src: templates/kibana_repo.j2
     dest: /etc/yum.repos.d/kibana.repo
-  when: ansible_hostname[8:14]|lower == 'node-5'
-
-- name: Creating repo for filebeat
-  template:
-    src: templates/filebeat_repo.j2
-    dest: /etc/yum.repos.d/filebeat.repo
   when: ansible_hostname[8:14]|lower == 'node-5'

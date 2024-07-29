@@ -20,7 +20,7 @@
 #    dest: '{{ certs_dir }}/elastic-stack-ca.zip'
 #    owner: root
 #    group: elasticsearch
-#    mode: '644'
+#    mode: '640'
 #    remote_src: yes
 #
 #- name: Unarchive a elastic-stack-ca.zip file
@@ -30,7 +30,7 @@
 #    remote_src: yes
 #    owner: root
 #    group: elasticsearch
-#    mode: '644'
+#    mode: '640'
 #
 #- name: Creating certificate using openssl
 #  ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node*,IP:10.142.0.15,IP:10.142.0.16"
@@ -50,7 +50,7 @@
 #    path: '{{ certs_dir }}/elastic-stack-ca.p12' 
 #    owner: root
 #    group: elasticsearch
-#    mode: '644'
+#    mode: '640'
 #
 #
 #### Generate a new certificate for the transport layer
@@ -69,7 +69,7 @@
 #    dest: '{{ certs_dir }}/elastic-certificates.p12'
 #    owner: root
 #    group: elasticsearch
-#    mode: '644'
+#    mode: '640'
 #    remote_src: yes
 #
 #- name: Remove the existing keystore values for the default transport keystore and truststore
@@ -97,11 +97,3 @@
     - '{{ ca }}/caa.crt'
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
-
-    
-#- name: Add the existing keystore values for the default http keystore and truststore
-#  community.elastic.elastic_keystore:
-#    name: '{{ item }}'
-#    value: '{{ http_pass }}'
-#  with_items:
-#    - xpack.security.http.ssl.keystore.secure_password

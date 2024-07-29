@@ -1,0 +1,28 @@
+- name: Install kibana
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - kibana 
+  when: ansible_hostname[8:14]|lower == 'node-5'
+
+- name: Modifying kibana.yml file on kibana node
+  template:
+    src: templates/kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+  when: ansible_hostname[8:14]|lower == 'node-5'
+
+- name: Kibana service restart
+  service:
+    name: elasticsearch
+    state: started
+  ignore_errors: true
+
+- name: Creating a key for Kibana
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes  > {{ kibana_key }}
+
+- name: Creating a Cert for Kibana
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys  > {{ kibana_cert }}
+
+- name: Creating a ca cert for Kibana
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain > {{ kibana_ca }}

@@ -1,2 +1,10 @@
 ---
 # defaults file for kibana
+kibana_cert: /etc/kibana/kibana_cert.cer
+kibana_key: /etc/kibana/kibana_key.key
+kibana_ca: /etc/kibana/client-ca.cer
+
+kibana_user: kibana_system
+kibana_pass: 7rt*5-+gyppFzyaEeDSV
+
+certs_dir: /etc/elasticsearch/certs
