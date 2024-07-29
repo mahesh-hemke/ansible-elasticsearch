@@ -61,7 +61,8 @@
     responses:
       'Please enter the desired output file(.*)': ''
       'Enter password for(.*)': '{{ elastic_pass }}'
-
+  ignore_errors: true
+  
 - name: Copy elastic-certificates.p12 file to certs directory
   ansible.builtin.copy:
     src: /usr/share/elasticsearch/elastic-certificates.p12
