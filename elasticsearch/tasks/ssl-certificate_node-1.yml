@@ -32,13 +32,14 @@
     group: elasticsearch
     mode: '644'
 
-- name: Run a command using a templated variable (always use quote filter to avoid injection)
+- name: Creating certificate using openssl
   ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node*,IP:10.142.0.15,IP:10.142.0.16"
 
 
 ### This step ensures that your cluster trusts the new CA certificate.
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
+  ignore_errors: true
 
 - name: Storing default http keystore password
   command: /usr/share/elasticsearch/bin/elasticsearch-keystore show xpack.security.http.ssl.keystore.secure_password

@@ -13,7 +13,7 @@
     owner: root
     group: elasticsearch
     mode: '644'
-  with_item:
+  with_items:
     - { src: caa.crt , dest: '{{ ca }}/caa.crt' }
     - { src: caa.key , dest: '{{ ca }}/caa.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
