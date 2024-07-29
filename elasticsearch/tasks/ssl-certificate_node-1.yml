@@ -59,7 +59,7 @@
     - xpack.security.transport.ssl.truststore.secure_password
     - xpack.security.http.ssl.keystore.secure_password
 
-- name: Remove the existing keystore values for the default transport keystore and truststore
+- name: Add the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     value: '{{ elastic_pass }}'

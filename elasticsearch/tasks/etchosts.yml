@@ -2,11 +2,11 @@
   lineinfile:
     path: /etc/hosts
     line: '{{ node_2_ip }} {{ node_2 }}'
-  when: ansible_hostname[8:14]|lower == 'node-1'
+  when: ansible_hostname[8:14]|lower == 'node-3'
     
 - name: Adding hosts entry in hosts file
   lineinfile:
     path: /etc/hosts
     line: '{{ node_1_ip }} {{ node_1 }}'
-  when: ansible_hostname[8:14]|lower == 'node-2'
+  when: ansible_hostname[8:14]|lower == 'node-4'
     

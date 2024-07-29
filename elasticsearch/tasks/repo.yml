@@ -8,10 +8,10 @@
   template:
     src: templates/kibana.j2
     dest: /etc/yum.repos.d/kibana_repo.repo
-  when: ansible_hostname[8:14]|lower == 'node-1'
+  when: ansible_hostname[8:14]|lower == 'node-3'
 
 - name: Creating repo for filebeat
   template:
     src: templates/filebeat.j2
     dest: /etc/yum.repos.d/filebeat_repo.repo
-  when: ansible_hostname[8:14]|lower == 'node-1'
+  when: ansible_hostname[8:14]|lower == 'node-3'
