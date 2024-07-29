@@ -29,8 +29,17 @@
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
     echo: true
     responses:
-      'Please enter the desired output file(.*)': '{{ els_cert }}'
+      'Please enter the desired output file(.*)': ''
       'Enter password for(.*)': '{{ elastic_pass }}'
+  
+- name: Copy elastic-certificates.p12 file to certs directory
+  ansible.builtin.copy:
+    src: /usr/share/elasticsearch/elastic-certificates.p12
+    dest: '{{ certs_dir }}/elastic-certificates.p12'
+    owner: root
+    group: elasticsearch
+    mode: '644'
+    remote_src: yes
       
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
