@@ -12,10 +12,11 @@
     dest: /etc/kibana/kibana.yml
   when: ansible_hostname[8:14]|lower == 'node-5'
 
-- name: Kibana service restart
+- name: Kibana service stop
   service:
-    name: elasticsearch
-    state: started
+    name: kibana
+    state: stopped
+    enabled: true
   ignore_errors: true
 
 - name: Creating a key for Kibana
@@ -40,4 +41,10 @@
     echo: true
     responses:
       'Enter Import Password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
+
+- name: Kibana service stop
+  service:
+    name: kibana
+    state: restarted
   ignore_errors: true
