@@ -21,6 +21,10 @@
   ansible.builtin.file:
     path: '{{ certs_dir }}'
     state: directory
+    owner: root
+    group: elasticsearch
+    mode: '750'
+  
 
 - name: Install pexpect package
   ansible.builtin.pip:
