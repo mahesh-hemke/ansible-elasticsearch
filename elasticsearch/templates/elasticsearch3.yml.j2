@@ -14,13 +14,13 @@
 #
 # Use a descriptive name for your cluster:
 #
-cluster.name: "{{ cluster_name }}"
+cluster.name: {{ cluster_name }}
 #
 # ------------------------------------ Node ------------------------------------
 #
 # Use a descriptive name for the node:
 #
-node.name: "{{ node_1 }}"
+node.name: {{ node_1 }}
 #
 # Add custom attributes to the node:
 #
@@ -53,12 +53,12 @@ path.logs: /var/log/elasticsearch
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-network.host: "{{ node_1_ip }}"
+network.host: {{ node_1_ip }}
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
 #
-http.port: "{{ elastic_port }}"
+http.port: {{ elastic_port }}
 #
 # For more information, consult the network module documentation.
 #
@@ -96,25 +96,25 @@ xpack.security.enrollment.enabled: true
 # Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents
 xpack.security.http.ssl:
   enabled: true
-  keystore.path: "{{ http_keystore }}"
+  keystore.path: {{ http_keystore }}
 
 # Enable encryption and mutual authentication between cluster nodes
 xpack.security.transport.ssl:
   enabled: true
   verification_mode: certificate
-  keystore.path: "{{ transport_keystore }}"
-  truststore.path: "{{ transport_truststore }}"
+  keystore.path: {{ transport_keystore }}
+  truststore.path: {{ transport_truststore }}
 
 # Create a new cluster with the current node only
 # Additional nodes can still join the cluster later
-cluster.initial_master_nodes: ["{{ node_1_ip }}","{{ node_2_ip }}"]
+cluster.initial_master_nodes: ["{{ node_1 }}","{{ node_2 }}"]
 
 # Allow HTTP API connections from anywhere
 # Connections are encrypted and require user authentication
-http.host: "{{ http_host }}"
+http.host: {{ http_host }}
 
 # Allow other nodes to join the cluster from anywhere
 # Connections are encrypted and mutually authenticated
-transport.host: "{{ transport_host }}"
+transport.host: {{ transport_host }}
 
 #----------------------- END SECURITY AUTO CONFIGURATION -------------------------

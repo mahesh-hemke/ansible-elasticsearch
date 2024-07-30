@@ -18,7 +18,7 @@
     - { src: caa.key , dest: '{{ ca }}/caa.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
 
-- name: Service stop
+- name: Stop elasticsearch service
   service:
     name: elasticsearch 
     state: stopped

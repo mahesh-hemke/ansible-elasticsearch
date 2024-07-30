@@ -28,7 +28,7 @@
 - name: Creating a ca cert for Kibana
   shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain -password pass:{{ cert_pass }} > {{ kibana_ca }}
 
-- name: Kibana service stop
+- name: Kibana service start
   service:
     name: kibana
     state: restarted

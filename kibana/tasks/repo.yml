@@ -2,4 +2,3 @@
   template:
     src: templates/kibana_repo.j2
     dest: /etc/yum.repos.d/kibana.repo
-  when: ansible_hostname[8:14]|lower == 'node-5'
