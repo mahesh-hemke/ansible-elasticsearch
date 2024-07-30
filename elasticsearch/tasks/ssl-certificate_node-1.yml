@@ -38,9 +38,15 @@
     group: elasticsearch
     mode: '750'
 
+- name: Check that the elastic-certificates.p12
+  stat:
+    path: '{{ certs_dir }}/ca/caa.key'
+  register: stat_result
+
 - name: Creating certificate using openssl
   ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,IP:10.142.0.15,IP:10.142.0.16"
-
+  when: not stat_result.stat.exists
+  
 - name: Change file ownership, group and permissions
   ansible.builtin.file:
     path: '{{ item }}'
@@ -51,9 +57,14 @@
     - '{{ certs_dir }}/ca/caa.key'
     - '{{ certs_dir }}/ca/caa.crt'
 
+
+- name: Check if aliase is present
+  ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass 7rt*5-+gyppFzyaEeDSV -alias new-caa -list | grep -i new-caa |cut -d',' -f1
+  register: aliase
 ### This step ensures that your cluster trusts the new CA certificate.
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
+  when: aliase != "new-caa"
   ignore_errors: true
 
 - name: Storing default http keystore password
