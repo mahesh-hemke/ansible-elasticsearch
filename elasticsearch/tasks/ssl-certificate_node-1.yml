@@ -97,3 +97,8 @@
     - '{{ ca }}/caa.crt'
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
+
+- name: Finally start  elasticsearch service - node-1
+  service:
+    name: elasticsearch 
+    state: restarted

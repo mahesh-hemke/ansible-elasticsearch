@@ -31,6 +31,7 @@
     responses:
       'Please enter the desired output file(.*)': ''
       'Enter password for(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
   
 - name: Copy elastic-certificates.p12 file to certs directory
   ansible.builtin.copy:
@@ -56,3 +57,8 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+
+- name: Finally start  elasticsearch service - node-2
+  service:
+    name: elasticsearch 
+    state: restarted
