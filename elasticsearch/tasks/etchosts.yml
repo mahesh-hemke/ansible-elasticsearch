@@ -1,4 +1,4 @@
-- name: Adding hosts entry in hosts file
+- name: Adding hosts entry in hosts file node -1
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -7,7 +7,7 @@
     - '{{ node_3_ip }} {{ node_3 }}'
   when: ansible_hostname[8:14]|lower == 'node-5'
     
-- name: Adding hosts entry in hosts file
+- name: Adding hosts entry in hosts file node-2
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -16,7 +16,7 @@
     - '{{ node_3_ip }} {{ node_3 }}'
   when: ansible_hostname[8:14]|lower == 'node-6'
 
-- name: Adding hosts entry in hosts file
+- name: Adding hosts entry in hosts file node-3
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'

@@ -7,3 +7,5 @@
   when: ansible_hostname[8:14]|lower == 'node-5'
 - include_tasks: ssl-certificate_node-2.yml
   when: ansible_hostname[8:14]|lower == 'node-6'
+- include_tasks: ssl-certificate_node-3.yml
+  when: ansible_hostname[8:14]|lower == 'node-7'
