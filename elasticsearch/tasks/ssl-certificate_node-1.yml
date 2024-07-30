@@ -4,12 +4,18 @@
     state: stopped
   ignore_errors: true
 
+- name: Check that the elastic-stack-ca.zip exists
+  stat:
+    path: /usr/share/elasticsearch/elastic-stack-ca.zip
+  register: stat_result
+
 - name: Generate a CA certificate using the provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
     echo: true
     responses:
       'Please enter the desired output file(.*)': ''
+  when: not stat_result.stat.exists
   ignore_errors: true
 
 #### need to modify above
@@ -52,6 +58,10 @@
     group: elasticsearch
     mode: '640'
 
+- name: Check that the elastic-certificates.p12
+  stat:
+    path: /usr/share/elasticsearch/elastic-certificates.p12
+  register: stat_result
 
 ### Generate a new certificate for the transport layer
 - name: Import the newly created CA certificate into the Elasticsearch truststore
@@ -61,6 +71,7 @@
     responses:
       'Please enter the desired output file(.*)': ''
       'Enter password for(.*)': '{{ elastic_pass }}'
+  when: not stat_result.stat.exists
   ignore_errors: true
   
 - name: Copy elastic-certificates.p12 file to certs directory
