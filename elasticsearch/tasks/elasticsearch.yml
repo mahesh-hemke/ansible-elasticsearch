@@ -30,18 +30,24 @@
   ansible.builtin.pip:
     name: pexpect
 
-- name: Modifying elasticsearch.yml file on both node
+- name: Modifying elasticsearch.yml file on node-1
   template:
-    src: templates/elasticsearch3.yml.j2
+    src: templates/elasticsearch1.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
   when: ansible_hostname[8:14]|lower == 'node-5'
 
-- name: Modifying elasticsearch.yml file on both node
+- name: Modifying elasticsearch.yml file on node-2
   template:
-    src: templates/elasticsearch4.yml.j2
+    src: templates/elasticsearch2.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
-  when: ansible_hostname[8:14]|lower == 'node-6'
+  when: ansible_hostname[8:14]|lower == 'node-6' 
 
+- name: Modifying elasticsearch.yml file on node-3
+  template:
+    src: templates/elasticsearch3.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  when: ansible_hostname[8:14]|lower == 'node-7'
+ 
 - name: service restart
   service:
     name: elasticsearch

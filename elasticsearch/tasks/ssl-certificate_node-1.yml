@@ -44,7 +44,7 @@
   register: stat_result
 
 - name: Creating certificate using openssl
-  ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,IP:10.142.0.15,IP:10.142.0.16"
+  ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,DNS:elastic-node-7,IP:10.142.0.15,IP:10.142.0.16,IP:10.182.0.7"
   when: not stat_result.stat.exists
   
 - name: Change file ownership, group and permissions
@@ -129,7 +129,7 @@
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
 
-- name: Finally start  elasticsearch service - node-1
+- name: Finally start elasticsearch service - node-1
   service:
     name: elasticsearch 
     state: restarted
