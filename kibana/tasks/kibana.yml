@@ -27,8 +27,11 @@
   template:
     src: templates/kibana.yml.j2
     dest: /etc/kibana/kibana.yml
-  notify: Kibana restart
+  notify: Kbn_restart
   when: ansible_hostname[8:14]|lower == 'node-5'
+
+- name: FLush the handlers
+  ansible.builtin.meta: flush_handlers
 
 ### Reset the kibana_system users password
 - name: Reseting kibana_system users passwd
