@@ -13,4 +13,4 @@ els_node_5_ip: 10.142.0.15
 els_node_6_ip: 10.142.0.16
 els_node_7_ip: 10.182.0.7
 #ngx_node_ip: 10.182.0.2
-ngx_node_ip: 10.182.0.4
+ngx_node_ip: 10.142.0.11
