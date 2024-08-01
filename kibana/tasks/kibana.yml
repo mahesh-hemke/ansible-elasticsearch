@@ -13,6 +13,16 @@
     enabled: true
   ignore_errors: true
 
+
+- name: Copy ehttp cert file to certs directory
+  ansible.builtin.copy:
+    src: '{{ certs_dir }}/http_ca.crt'
+    dest: '{{ kibana_ca }}'
+    owner: root
+    group: elasticsearch
+    mode: '640'
+    remote_src: yes
+
 #### Creating Keys and certificates for Kibana
 - name: Creating a key for Kibana
   shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ elastic_pass }}  > {{ kibana_key }}
