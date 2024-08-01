@@ -73,3 +73,6 @@
     dest: /etc/elasticsearch/elasticsearch.yml
   notify: 
     - els_restart
+  
+- name: FLush the handlers
+  ansible.builtin.meta: flush_handlers
