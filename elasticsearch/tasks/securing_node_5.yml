@@ -134,6 +134,7 @@
     src: templates/els_node_5.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
   notify: els_restart
+  flush_handlers: true
 
 ### Fetching desired file on Ansible controller node
 - name: Fetching cert files
