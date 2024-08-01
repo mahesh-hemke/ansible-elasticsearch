@@ -33,4 +33,4 @@
     - '{{ els_node_5_ip }} {{ els_node_5 }}'
     - '{{ els_node_6_ip }} {{ els_node_6 }}'
     - '{{ els_node_7_ip }} {{ els_node_7 }}'
-  when: ansible_hostname[0:5]|lower == 'rhel8'
+  when: ansible_hostname[0:5]|lower == 'node-1'
