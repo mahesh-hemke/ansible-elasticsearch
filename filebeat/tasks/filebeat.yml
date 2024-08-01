@@ -1,7 +1,5 @@
-- name: enable the nginx and system module on filebeat server
-  shell: | 
-    - filebeat modules enable nginx
-    - filebeat modules enable system
+- name: enable system module on filebeat server
+  shell: filebeat modules enable system
 
 - name: Copy cert file from node-5 to - rhel8-1
   ansible.builtin.copy:
@@ -21,7 +19,6 @@
     src: templates/{{ item.src }}
     dest: /etc/filebeat/modules.d/{{ item.dest }}
   with_items:
-    - { src: ngx_module.j2 , dest: nginx.yml }
     - { src: sys_module.j2 , dest: system.yml }
   notify: 
     - flb_restart
