@@ -52,3 +52,6 @@
     dest: /etc/nginx/conf.d/els.conf
   notify: 
     - ngx_restart
+
+- name: FLush the handlers
+  ansible.builtin.meta: flush_handlers

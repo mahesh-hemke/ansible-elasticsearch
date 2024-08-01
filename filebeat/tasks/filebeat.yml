@@ -31,6 +31,9 @@
   notify: 
     - flb_restart
 
+- name: FLush the handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Setup filebeat
   shell: filebeat setup
 

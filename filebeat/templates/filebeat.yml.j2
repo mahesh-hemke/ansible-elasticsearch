@@ -139,7 +139,7 @@ setup.kibana:
 # ---------------------------- Elasticsearch Output ----------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["{{ els_node_6_ip }}:{{ elastic_port}}",""{{ els_node_6_ip }}:{{ elastic_port}}"",""{{ els_node_6_ip }}:{{ elastic_port}}""]
+  hosts: ["{{ els_node_5_ip }}:{{ elastic_port}}","{{ els_node_6_ip }}:{{ elastic_port}}","{{ els_node_7_ip }}:{{ elastic_port}}"]
   loadbalance: true
   
   # Certificate for SSL client authentication
