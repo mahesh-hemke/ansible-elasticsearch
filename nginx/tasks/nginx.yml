@@ -24,6 +24,17 @@
       'Re-type new password(.*)': '{{ elastic_pass }}'
   ignore_errors: true
 
+- name: Copy cert file from node-5 to - rhel8-1
+  ansible.builtin.copy:
+    src: '/home/mahesh_hemke24/{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: root
+    group: root
+    mode: '640'
+  with_items:
+    - { src: caa.crt , dest: '{{ certs_dir }}/{{ els_crt }}' }
+    - { src: caa.key , dest: '{{ key_dir }}/{{ els_key }}' }
+
 - name: Modifying nginx conf file on nginx (rhel8-1)
   template:
     src: templates/els_nginx.conf.j2

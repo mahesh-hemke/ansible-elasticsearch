@@ -145,6 +145,7 @@
     - '{{ ca }}/caa.crt'
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
+    - '{{ certs_dir }}/http_ca.crt'
 
 ### Reset the elastic users password
 - name: Reseting elastic users passwd

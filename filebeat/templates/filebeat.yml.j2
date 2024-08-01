@@ -143,13 +143,13 @@ output.elasticsearch:
   loadbalance: true
   
   # Certificate for SSL client authentication
-  ssl.certificate: "/etc/pki/nginx/{{ els_crt }}"
+  ssl.certificate: "{{ certs_dir }}/{{ els_crt }}"
 
   # Client Certificate Key
-  ssl.key: "/etc/pki/nginx/private/{{ els_key }}"
+  ssl.key: "{{ key_dir }}/{{ els_key }}"
 
   # List of root certificates for HTTPS server verifications
-  ssl.certificate_authorities: ["/etc/pki/nginx/{{ els_ca_crt }}"]
+  ssl.certificate_authorities: ["{{ certs_dir }}/{{ els_ca_crt }}"]
 
   # Performance preset - one of "balanced", "throughput", "scale",
   # "latency", or "custom".
