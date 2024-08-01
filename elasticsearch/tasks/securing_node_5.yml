@@ -69,7 +69,7 @@
 ### This step ensures that elasticsearch cluster trusts the new CA certificate.
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
-  when: aliase != "new-caa"
+  when: aliase.stdout != "new-caa"
   ignore_errors: true
 
 - name: Storing default http keystore password

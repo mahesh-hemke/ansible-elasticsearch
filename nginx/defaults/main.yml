@@ -8,7 +8,7 @@ ngx_kibana_port: 9999
 
 
 ### Nginx Certs. keys
-certs_dir: /etc/pki/nginx/
+certs_dir: /etc/pki/nginx
 key_dir: /etc/pki/nginx/private
 
 els_key: nginx_server.key
