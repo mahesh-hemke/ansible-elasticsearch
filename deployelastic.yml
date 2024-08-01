@@ -4,7 +4,7 @@
   gather_facts: true
   remote_user: mahesh_hemke24
   roles:
-    - elasticsearch
-    - kibana
-    - nginx 
+    #- elasticsearch
+    #- kibana
+    #- nginx 
     - filebeat
