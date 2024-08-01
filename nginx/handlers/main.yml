@@ -1,6 +1,6 @@
 ---
 # handlers file for filebeat
-- name: ngx restart
+- name: ngx_restart
   service:
     name: nginx
     enabled: true

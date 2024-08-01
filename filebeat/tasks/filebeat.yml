@@ -10,6 +10,7 @@
     owner: root
     group: root
     mode: '640'
+    remote_src: yes
   with_items:
     - { src: caa.crt , dest: '{{ certs_dir }}/{{ els_crt }}' }
     - { src: caa.key , dest: '{{ key_dir }}/{{ els_key }}' }
@@ -19,10 +20,10 @@
   template:
     src: templates/{{ item.src }}
     dest: /etc/filebeat/modules.d/{{ item.dest }}
-  with_item:
+  with_items:
     - { src: ngx_module.j2 , dest: nginx.yml }
     - { src: sys_module.j2 , dest: system.yml }
-  notify: ngx restart
+  notify: flb_restart
 
 - name: Setup filebeat
   shell: filebeat setup

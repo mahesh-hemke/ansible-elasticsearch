@@ -1,6 +1,6 @@
 ---
 # handlers file for filebeat
-- name: filebeat restart
+- name: flb_restart
   service:
     name: filebeat
     enabled: true

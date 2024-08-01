@@ -68,4 +68,4 @@
   template:
     src: templates/els_node_7.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
-  notify: els restart
+  notify: els_restart
