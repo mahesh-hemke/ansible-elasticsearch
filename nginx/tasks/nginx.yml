@@ -32,8 +32,8 @@
     group: elasticsearch
     mode: '750'
   with_item:
-    - { {{ certs_dir }} }
-    - {{ key_dir }}
+    - { '{{ certs_dir }}' }
+    - { '{{ key_dir }}' }
 
 - name: Copy cert file from node-5 to - nginx node
   ansible.builtin.copy:
