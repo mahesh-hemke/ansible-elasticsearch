@@ -51,5 +51,5 @@
   template:
     src: templates/els_nginx.conf.j2
     dest: /etc/nginx/conf.d/els.conf
-  notify: ngx_restart
-  flush_handlers: true
+  notify: 
+    - ngx_restart

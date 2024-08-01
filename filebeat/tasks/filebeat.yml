@@ -23,8 +23,8 @@
   with_items:
     - { src: ngx_module.j2 , dest: nginx.yml }
     - { src: sys_module.j2 , dest: system.yml }
-  notify: flb_restart
-  flush_handlers: true
+  notify: 
+    - flb_restart
 
 - name: Setup filebeat
   shell: filebeat setup
