@@ -8,7 +8,7 @@
     - python3-cryptography
     - expect
     - unzip
-  when: ansible_hostname[0:3]|lower == 'ela'
+  when: ansible_hostname[0:3]|lower == 'ela' and ansible_hostname[8:14]|lower != 'node-1'
 
 - name: els start
   service:
