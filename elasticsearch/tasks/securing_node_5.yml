@@ -127,6 +127,11 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+  notify: 
+    - els_restart
+
+- name: FLush the handlers
+  ansible.builtin.meta: flush_handlers
 
 #### Modyfying the elasticsearch.yml file with proper configurations
 - name: Modifying elasticsearch.yml file on node-5
