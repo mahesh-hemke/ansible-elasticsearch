@@ -15,13 +15,13 @@
 
 #### Creating Keys and certificates for Kibana
 - name: Creating a key for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ cert_pass }}  > {{ kibana_key }}
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ elastic_pass }}  > {{ kibana_key }}
 
 - name: Creating a Cert for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys -password pass:{{ cert_pass }} > {{ kibana_cert }}
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys -password pass:{{ elastic_pass }} > {{ kibana_cert }}
 
 - name: Creating a ca cert for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain -password pass:{{ cert_pass }} > {{ kibana_ca }}
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain -password pass:{{ elastic_pass }} > {{ kibana_ca }}
 
 - name: Modifying kibana.yml file on kibana node
   template:
@@ -37,5 +37,5 @@
     echo: true
     responses:
       'Please confirm that you would like to continue(.*)': 'y'
-      'Enter password for(.*)': '{{ kibana_pass }}'
-      'Re-enter password for(.*)': '{{ kibana_pass }}'
+      'Enter password for(.*)': '{{ elastic_pass }}'
+      'Re-enter password for(.*)': '{{ elastic_pass }}'
