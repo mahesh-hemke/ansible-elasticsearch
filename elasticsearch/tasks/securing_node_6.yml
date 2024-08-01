@@ -68,9 +68,6 @@
     - xpack.security.transport.ssl.truststore.secure_password
   notify: 
     - els_restart
-  
-- name: FLush the handlers
-  ansible.builtin.meta: flush_handlers
 
 - name: Modifying elasticsearch.yml file on node-6
   template:

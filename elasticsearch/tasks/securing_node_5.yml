@@ -130,9 +130,6 @@
   notify: 
     - els_restart
 
-- name: FLush the handlers
-  ansible.builtin.meta: flush_handlers
-
 #### Modyfying the elasticsearch.yml file with proper configurations
 - name: Modifying elasticsearch.yml file on node-5
   template:
@@ -155,3 +152,13 @@
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
     - '{{ certs_dir }}/http_ca.crt'
+
+### Reset the kibana_system users password
+- name: Reseting kibana_system users passwd
+  ansible.builtin.expect:
+    command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -i
+    echo: true
+    responses:
+      'Please confirm that you would like to continue(.*)': 'y'
+      'Enter password for(.*)': '{{ elastic_pass }}'
+      'Re-enter password for(.*)': '{{ elastic_pass }}'
