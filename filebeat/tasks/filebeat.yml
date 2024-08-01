@@ -15,7 +15,6 @@
     owner: root
     group: root
     mode: '640'
-    remote_src: yes
   with_items:
     - { src: caa.crt , dest: '{{ certs_dir }}/{{ els_crt }}' }
     - { src: caa.key , dest: '{{ key_dir }}/{{ els_key }}' }
