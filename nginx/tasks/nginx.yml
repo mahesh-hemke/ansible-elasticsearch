@@ -24,7 +24,7 @@
       'Re-type new password(.*)': '{{ elastic_pass }}'
   ignore_errors: true
 
-- name: Creating cert directory on - node-6
+- name: Creating cert directory on - nginx node
   ansible.builtin.file:
     path: '{{ item }}'
     state: directory
@@ -35,7 +35,7 @@
     - { {{ certs_dir }} }
     - {{ key_dir }}
 
-- name: Copy cert file from node-5 to - rhel8-1
+- name: Copy cert file from node-5 to - nginx node
   ansible.builtin.copy:
     src: '/home/mahesh_hemke24/{{ item.src }}'
     dest: '{{ item.dest }}'
