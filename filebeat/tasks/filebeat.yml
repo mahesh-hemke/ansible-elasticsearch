@@ -21,7 +21,7 @@
     - { src: caa.key , dest: '{{ key_dir }}/{{ els_key }}' }
     - { src: http_ca.crt , dest: '{{ certs_dir }}/{{ els_ca_crt }}' }
 
-- name: Modifying filebeat modulefile on nginx (rhel8-1)
+- name: Modifying filebeat module file and yml file on nginx (rhel8-1)
   template:
     src: templates/{{ item.src }}
     dest: /etc/filebeat/{{ item.dest }}
