@@ -1,8 +1,10 @@
 ---
 # tasks file for elasticsearch
 - include_tasks: repo.yml                             #### Confuration of dnf repo file for packages
+  when: ansible_hostname[8:14]|lower != 'node-1'
 - include_tasks: etchosts.yml                         #### Adding hosts entries of other nodes
 - include_tasks: els.yml                              #### Installation of Elasticsearch with other pkg and modyfying the els yml file
+  when: ansible_hostname[8:14]|lower != 'node-1'      
 - include_tasks: securing_node_5.yml
   when: ansible_hostname[8:14]|lower == 'node-5'      #### Securing node with certificates node-5
 - include_tasks: securing_node_6.yml
