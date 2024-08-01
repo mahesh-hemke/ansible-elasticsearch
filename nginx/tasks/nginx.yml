@@ -29,9 +29,9 @@
     path: '{{ item }}'
     state: directory
     owner: root
-    group: elasticsearch
+    group: root
     mode: '750'
-  with_item:
+  with_items:
     - { '{{ certs_dir }}' }
     - { '{{ key_dir }}' }
 
