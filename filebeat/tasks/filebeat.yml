@@ -24,9 +24,10 @@
 - name: Modifying filebeat modulefile on nginx (rhel8-1)
   template:
     src: templates/{{ item.src }}
-    dest: /etc/filebeat/modules.d/{{ item.dest }}
+    dest: /etc/filebeat/{{ item.dest }}
   with_items:
-    - { src: sys_module.j2 , dest: system.yml }
+    - { src: sys_module.j2 , dest: modules.d/system.yml }
+    - { src: filebeat.yml.j2 , dest: filebeat.yml }
   notify: 
     - flb_restart
 
