@@ -5,3 +5,4 @@
     name: filebeat
     enabled: true
     state: restarted
+  listen: "flb_restart"

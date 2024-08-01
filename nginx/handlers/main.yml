@@ -5,3 +5,4 @@
     name: nginx
     enabled: true
     state: restarted
+  listen: "ngx_restart"
