@@ -40,7 +40,7 @@ server.ssl.key: {{ kibana_key }}
 
 # =================== System: Elasticsearch ===================
 # The URLs of the Elasticsearch instances to use for all your queries.
-elasticsearch.hosts: ["https://{{ els_node_5 }}:9200","https://{{ els_node_6 }}:9200","https://{{ els_node_7 }}:9200"]
+elasticsearch.hosts: ["https://{{ els_node_5_ip }}:9200","https://{{ els_node_6_ip }}:9200","https://{{ els_node_7_ip }}:9200"]
 
 # If your Elasticsearch is protected with basic authentication, these settings provide
 # the username and password that the Kibana server uses to perform maintenance on the Kibana
