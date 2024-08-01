@@ -5,4 +5,4 @@
     name: kibana
     state: restarted
     enabled: true
-  #listen: "kbn_restart"
+  listen: "kbn_restart"
