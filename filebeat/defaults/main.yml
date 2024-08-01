@@ -4,7 +4,7 @@
 elastic_port: 9200
 kibana_port: 5601
 
-certs_dir: /etc/pki/nginx/
+certs_dir: /etc/pki/nginx
 key_dir: /etc/pki/nginx/private
 
 ### Nginx Certs. keys
