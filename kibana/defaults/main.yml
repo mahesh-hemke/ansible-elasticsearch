@@ -2,7 +2,7 @@
 # Certificate and keys fir Kibana
 kibana_cert: /etc/kibana/kibana_cert.cer
 kibana_key: /etc/kibana/kibana_key.key
-kibana_ca: /etc/kibana/client-ca.cer
+kibana_ca: /etc/kibana/http_ca.crt
 certs_dir: /etc/elasticsearch/certs
 
 #Kibana Port
