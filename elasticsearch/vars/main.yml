@@ -1,8 +1,13 @@
 ---
 # vars file for elasticsearch
-node_1: elastic-node-5
-node_2: elastic-node-6
-node_3: elastic-node-7
-node_1_ip: 10.142.0.15
-node_2_ip: 10.142.0.16
-node_3_ip: 10.182.0.7
+### Hostnames of all elasticsearch nodes
+els_node_5: elastic-els_node_5
+els_node_6: elastic-els_node_6
+els_node_7: elastic-els_node_7
+ngx_node: rhel8-1
+
+### IP Addresses of all elasticsearch nodes
+els_node_5_ip: 10.142.0.15
+els_node_6_ip: 10.142.0.16
+els_node_7_ip: 10.182.0.7
+ngx_node_ip: 10.182.0.2

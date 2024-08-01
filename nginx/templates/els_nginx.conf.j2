@@ -1,0 +1,35 @@
+upstream elasticsearch {
+    server {{ els_node_5_ip }}:{{ elastic_port }};
+    server {{ els_node_6_ip }}:{{ elastic_port }};
+    server {{ els_node_7_ip }}:{{ elastic_port }};
+}
+
+upstream kibana {
+    server {{ kibana_node_5 }}:{{ kibana_port }};
+}
+
+server {
+   listen {{ ngx_els_port }} ssl;
+   server_name _;
+   ssl_certificate /etc/pki/nginx/{{ els_key }};
+   ssl_certificate_key /etc/pki/nginx/private/{{ els_crt }};
+
+   location / {
+      proxy_pass https://elasticsearch;
+      auth_basic "Elasticsearch";                                       
+      auth_basic_user_file /etc/nginx/conf.d/elastic_credentials;        ####### Elasticsearch and kibana user to authenticate to elasticsearch and kibana resp.
+   }
+}
+
+server {
+   listen {{ ngx_kibana_port }} ssl;
+   server_name _;
+   ssl_certificate /etc/pki/nginx/{{ els_key }};
+   ssl_certificate_key /etc/pki/nginx/private/{{ els_crt }};
+
+   location / {
+      proxy_pass https://kibana;
+      auth_basic "Kibana";
+      auth_basic_user_file /etc/nginx/conf.d/elastic_credentials;       ####### Elasticsearch and kibana user to authenticate to elasticsearch and kibana resp.
+   }
+}

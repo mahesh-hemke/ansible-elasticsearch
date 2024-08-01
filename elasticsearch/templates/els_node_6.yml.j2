@@ -20,7 +20,7 @@ cluster.name: {{ cluster_name }}
 #
 # Use a descriptive name for the node:
 #
-node.name: {{ node_1 }}
+node.name: {{ els_node_6 }}
 #
 # Add custom attributes to the node:
 #
@@ -53,7 +53,7 @@ path.logs: /var/log/elasticsearch
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-network.host: {{ node_1_ip }}
+network.host: {{ els_node_6_ip }}
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
@@ -67,7 +67,7 @@ http.port: {{ elastic_port }}
 # Pass an initial list of hosts to perform discovery when this node is started:
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
-discovery.seed_hosts: ["{{ node_1_ip }}","{{ node_2_ip }}","{{ node_3_ip }}"]
+discovery.seed_hosts: ["{{ els_node_5_ip }}","{{ els_node_6_ip }}","{{ els_node_7_ip }}"]
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #
@@ -107,7 +107,7 @@ xpack.security.transport.ssl:
 
 # Create a new cluster with the current node only
 # Additional nodes can still join the cluster later
-cluster.initial_master_nodes: ["{{ node_1 }}","{{ node_2 }}","{{ node_3 }}"]
+cluster.initial_master_nodes: ["{{ els_node_5 }}","{{ els_node_6 }}","{{ els_node_7 }}"]
 
 # Allow HTTP API connections from anywhere
 # Connections are encrypted and require user authentication

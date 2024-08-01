@@ -1,0 +1,22 @@
+- name: enable the nginx and system module on filebeat server
+  shell: | 
+    - filebeat modules enable nginx
+    - filebeat modules enable system
+
+- name: Modifying filebeat modulefile on nginx (rhel8-1)
+  template:
+    src: templates/{{ item.src }}
+    dest: /etc/filebeat/modules.d/{{ item.dest }}
+  with_item:
+    - { src: ngx_module.j2 , dest: nginx.yml }
+    - { src: sys_module.j2 , dest: system.yml }
+  notify: ngx restart
+
+- name: Setup filebeat
+  shell: filebeat setup
+
+- name: restart the filebeat service
+  service: 
+    name: filebeat 
+    enabled: true
+    state: restarted

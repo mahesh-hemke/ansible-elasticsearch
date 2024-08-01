@@ -1,7 +1,7 @@
 ---
 # handlers file for filebeat
-- name: filebeat restart
+- name: ngx restart
   service:
-    name: filebeat
+    name: nginx
     enabled: true
     state: restarted

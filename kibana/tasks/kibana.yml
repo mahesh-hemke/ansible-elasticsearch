@@ -6,12 +6,6 @@
     - kibana 
   when: ansible_hostname[8:14]|lower == 'node-5'
 
-- name: Modifying kibana.yml file on kibana node
-  template:
-    src: templates/kibana.yml.j2
-    dest: /etc/kibana/kibana.yml
-  when: ansible_hostname[8:14]|lower == 'node-5'
-
 - name: Kibana service stop
   service:
     name: kibana
@@ -19,6 +13,7 @@
     enabled: true
   ignore_errors: true
 
+#### Creating Keys and certificates for Kibana
 - name: Creating a key for Kibana
   shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ cert_pass }}  > {{ kibana_key }}
 
@@ -28,8 +23,19 @@
 - name: Creating a ca cert for Kibana
   shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -cacerts -nokeys -chain -password pass:{{ cert_pass }} > {{ kibana_ca }}
 
-- name: Kibana service start
-  service:
-    name: kibana
-    state: restarted
-  ignore_errors: true
+- name: Modifying kibana.yml file on kibana node
+  template:
+    src: templates/kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+  notify: Kibana restart
+  when: ansible_hostname[8:14]|lower == 'node-5'
+
+### Reset the kibana_system users password
+- name: Reseting kibana_system users passwd
+  ansible.builtin.expect:
+    command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system -i
+    echo: true
+    responses:
+      'Please confirm that you would like to continue(.*)': 'y'
+      'Enter password for(.*)': '{{ kibana_pass }}'
+      'Re-enter password for(.*)': '{{ kibana_pass }}'

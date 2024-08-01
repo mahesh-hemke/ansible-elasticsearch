@@ -1,6 +1,6 @@
 ---
 # tasks file for kibana
-- include_tasks: repo.yml
+- include_tasks: repo.yml                             ### Confuration of dnf repo file for packages
   when: ansible_hostname[8:14]|lower == 'node-5'
-- include_tasks: kibana.yml
+- include_tasks: kibana.yml                           #### Installation of Kibana and modyfying the kibana yml file
   when: ansible_hostname[8:14]|lower == 'node-5'

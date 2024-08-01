@@ -1,10 +1,15 @@
 ---
-# vars file for kibana
+# vars file for filebeat
+---
+# vars file for elasticsearch
 ### Hostnames of all elasticsearch nodes
 els_node_5: elastic-els_node_5
 els_node_6: elastic-els_node_6
 els_node_7: elastic-els_node_7
 ngx_node: rhel8-1
+
+### Hostnames of all kibana nodes
+kibana_node_5: elastic-els_node_5
 
 ### IP Addresses of all elasticsearch nodes
 els_node_5_ip: 10.142.0.15

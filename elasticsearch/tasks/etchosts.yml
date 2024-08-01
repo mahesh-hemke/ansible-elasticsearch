@@ -1,26 +1,36 @@
-- name: Adding hosts entry in hosts file node -1
+- name: Adding hosts entry in hosts file node-5
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
-    - '{{ node_2_ip }} {{ node_2 }}'
-    - '{{ node_3_ip }} {{ node_3 }}'
+    - '{{ els_node_6_ip }} {{ els_node_6 }}'
+    - '{{ els_node_7_ip }} {{ els_node_7 }}'
   when: ansible_hostname[8:14]|lower == 'node-5'
     
-- name: Adding hosts entry in hosts file node-2
+- name: Adding hosts entry in hosts file node-6
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
-    - '{{ node_1_ip }} {{ node_1 }}'
-    - '{{ node_3_ip }} {{ node_3 }}'
+    - '{{ els_node_5_ip }} {{ els_node_5 }}'
+    - '{{ els_node_7_ip }} {{ els_node_7 }}'
   when: ansible_hostname[8:14]|lower == 'node-6'
 
-- name: Adding hosts entry in hosts file node-3
+- name: Adding hosts entry in hosts file node-7
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
-    - '{{ node_1_ip }} {{ node_1 }}'
-    - '{{ node_2_ip }} {{ node_2 }}'
+    - '{{ els_node_5_ip }} {{ els_node_5 }}'
+    - '{{ els_node_6_ip }} {{ els_node_6 }}'
   when: ansible_hostname[8:14]|lower == 'node-7'
+
+- name: Adding hosts entry in hosts file node-7
+  lineinfile:
+    path: /etc/hosts
+    line: '{{ item }}'
+  with_items:
+    - '{{ els_node_5_ip }} {{ els_node_5 }}'
+    - '{{ els_node_6_ip }} {{ els_node_6 }}'
+    - '{{ els_node_7_ip }} {{ els_node_7 }}'
+  when: ansible_hostname[0:5]|lower == 'rhel8'

@@ -1,4 +1,4 @@
-- name: Creating cert directory on node-2
+- name: Creating cert directory on - node-6
   ansible.builtin.file:
     path: '{{ ca }}'
     state: directory
@@ -6,7 +6,7 @@
     group: elasticsearch
     mode: '750'
 
-- name: Copy cert file from node-1 to node-2
+- name: Copy cert file from node-5 to - node-6
   ansible.builtin.copy:
     src: '/home/mahesh_hemke24/{{ item.src }}'
     dest: '{{ item.dest }}'
@@ -18,18 +18,18 @@
     - { src: caa.key , dest: '{{ ca }}/caa.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
 
-- name: Stop elasticsearch service
+- name: Stop elasticsearch service - node-6
   service:
     name: elasticsearch 
     state: stopped
 
-- name: Check that the elastic-certificates.p12
+- name: Check that the elastic-certificates.p12 - node-6
   stat:
     path: /usr/share/elasticsearch/elastic-certificates.p12
   register: stat_result
 
 ### Generate a new certificate for the transport layer
-- name: Import the newly created CA certificate into the Elasticsearch truststore - Node-2
+- name: Import the newly created CA certificate into the Elasticsearch truststore - node-6
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
     echo: true
@@ -39,7 +39,8 @@
   when: not stat_result.stat.exists
   ignore_errors: true
   
-- name: Copy elastic-certificates.p12 file to certs directory
+ ### Copy the generated file to the /etc/elasticsearch/cert directory 
+- name: Copy elastic-certificates.p12 file to certs directory - node-6
   ansible.builtin.copy:
     src: /usr/share/elasticsearch/elastic-certificates.p12
     dest: '{{ certs_dir }}/elastic-certificates.p12'
@@ -47,8 +48,9 @@
     group: elasticsearch
     mode: '640'
     remote_src: yes
-      
-- name: Remove the existing keystore values for the default transport keystore and truststore
+
+  ### Removing the default ketstore values   
+- name: Remove the existing keystore values for the default transport keystore and truststore - node-6
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     state: absent
@@ -56,7 +58,8 @@
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
 
-- name: Add the existing keystore values for the default transport keystore and truststore
+### Adding the ketstore values with latest update
+- name: Add the existing keystore values for the default transport keystore and truststore - node-6
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     value: '{{ elastic_pass }}'
@@ -64,7 +67,8 @@
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
 
-- name: Finally start  elasticsearch service - node-2
-  service:
-    name: elasticsearch 
-    state: restarted
+- name: Modifying elasticsearch.yml file on node-6
+  template:
+    src: templates/els_node_6.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify: els restart

@@ -1,0 +1,12 @@
+---
+# defaults file for filebeat
+## Ports of Elasticsearch and kibana
+elastic_port: 9200
+kibana_port: 5601
+ngx_els_port: 8080
+ngx_kibana_port: 9999
+
+
+### Nginx Certs. keys
+els_key: nginx_server.key
+els_crt: nginx_server.crt

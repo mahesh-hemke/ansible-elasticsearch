@@ -1,5 +1,5 @@
 - name: Creating repo for elasticsearch
   template:
-    src: templates/elasticsearch_repo.j2
-    dest: /etc/yum.repos.d/elasticsearch.repo
+    src: templates/els_repo.j2
+    dest: /etc/yum.repos.d/els.repo
   when: ansible_hostname[0:4]|lower == 'elas'

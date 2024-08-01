@@ -1,4 +1,4 @@
-- name: stop elasticsearch service
+- name: Stop elasticsearch service
   service:
     name: elasticsearch
     state: stopped
@@ -9,6 +9,8 @@
     path: /usr/share/elasticsearch/elastic-stack-ca.zip
   register: stat_result
 
+###1: Generate a new self-signed CA certificate
+### Using Elastic certificate utility to configure a self-signed CA certificate.
 - name: Generate a CA certificate using the provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
@@ -18,8 +20,7 @@
   when: not stat_result.stat.exists
   ignore_errors: true
 
-#### need to modify above
-
+### Copying the output file to the /etc/elasticsearch/certs directory
 - name: Copy elastic-stack-ca.zip file to certs directory
   ansible.builtin.copy:
     src: /usr/share/elasticsearch/elastic-stack-ca.zip
@@ -29,6 +30,7 @@
     mode: '640'
     remote_src: yes
 
+### Unzip the file
 - name: Unarchive a elastic-stack-ca.zip file
   ansible.builtin.unarchive:
     src: '{{ certs_dir }}/elastic-stack-ca.zip'
@@ -43,10 +45,12 @@
     path: '{{ certs_dir }}/ca/caa.key'
   register: stat_result
 
+### Generating certificate /etc/elasticsearch/certs/ca/caa.crt and certificate authority’s private key /etc/elasticsearch/certs/ca/caa.key
 - name: Creating certificate using openssl
   ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,DNS:elastic-node-7,IP:10.142.0.15,IP:10.142.0.16,IP:10.182.0.7"
   when: not stat_result.stat.exists
-  
+
+### Changing ownership , group and permissions of genearted files
 - name: Change file ownership, group and permissions
   ansible.builtin.file:
     path: '{{ item }}'
@@ -57,11 +61,12 @@
     - '{{ certs_dir }}/ca/caa.key'
     - '{{ certs_dir }}/ca/caa.crt'
 
-
 - name: Check if aliase is present
   ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass 7rt*5-+gyppFzyaEeDSV -alias new-caa -list | grep -i new-caa |cut -d',' -f1
   register: aliase
-### This step ensures that your cluster trusts the new CA certificate.
+
+### Importing the newly created CA certificate into the Elasticsearch truststore. 
+### This step ensures that elasticsearch cluster trusts the new CA certificate.
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
   when: aliase != "new-caa"
@@ -83,6 +88,7 @@
     path: /usr/share/elasticsearch/elastic-certificates.p12
   register: stat_result
 
+###2: Generate a new certificate for the transport layer
 ### Generate a new certificate for the transport layer
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.expect:
@@ -93,7 +99,8 @@
       'Enter password for(.*)': '{{ elastic_pass }}'
   when: not stat_result.stat.exists
   ignore_errors: true
-  
+
+ ### Copy the generated file to the /etc/elasticsearch/cert directory 
 - name: Copy elastic-certificates.p12 file to certs directory
   ansible.builtin.copy:
     src: /usr/share/elasticsearch/elastic-certificates.p12
@@ -103,6 +110,7 @@
     mode: '640'
     remote_src: yes
 
+### Removing the default ketstore values
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -111,7 +119,8 @@
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
 
-- name: Remove the existing keystore values for the transport keystore and truststore
+### Adding the ketstore values with latest update
+- name: Adding the keystore values for the transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     value: '{{ elastic_pass }}'
@@ -119,7 +128,15 @@
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
 
-- name: fetching cert files
+#### Modyfying the elasticsearch.yml file with proper configurations
+- name: Modifying elasticsearch.yml file on node-5
+  template:
+    src: templates/els_node_5.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify: els restart
+
+### Fetching desired file on Ansible controller node
+- name: Fetching cert files
   ansible.builtin.fetch:
     src: "{{ item }}"
     dest: /home/mahesh_hemke24/
@@ -129,7 +146,12 @@
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
 
-- name: Finally start elasticsearch service - node-1
-  service:
-    name: elasticsearch 
-    state: restarted
+### Reset the elastic users password
+- name: Reseting elastic users passwd
+  ansible.builtin.expect:
+    command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -i
+    echo: true
+    responses:
+      'Please confirm that you would like to continue(.*)': 'y'
+      'Enter password for(.*)': '{{ elastic_pass }}'
+      'Re-enter password for(.*)': '{{ elastic_pass }}'

@@ -1,17 +1,33 @@
 ---
-# defaults file for elasticsearch
+# # Certificate and keys fir ElasticSearch
+transport_truststore: certs/elastic-stack-ca.p12
+transport_keystore: certs/elastic-certificates.p12
+http_keystore: /etc/elasticsearch/certs/http.p12
+certs_dir: /etc/elasticsearch/certs
+els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
+ca: /etc/elasticsearch/certs/ca
+
+## Cluster name of elasticsearch
 cluster_name: dev-cluster
+
+## Ports of Elasticsearch
 elastic_port: 9200
 
-http_keystore: /etc/elasticsearch/certs/http.p12
-transport_keystore: certs/elastic-certificates.p12
-transport_truststore: certs/elastic-stack-ca.p12
-
-els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
 http_host: 0.0.0.0
 transport_host: 0.0.0.0
 
-elastic_pass: 7rt*5-+gyppFzyaEeDSV
+elastic_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66613931366339656137383961373661393339366364353135386265633834396363326136623535
+          3835303637313032373662313232656332303363316432660a636533626232626166646432366564
+          37626239393961306266343766303465663861346464306431373235646432356134383165636531
+          3965353030643930640a636134313735323561303465303535393266666262383332646132306134
+          3263
 
-certs_dir: /etc/elasticsearch/certs
-ca: /etc/elasticsearch/certs/ca
+kibana_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          31336531353235353036363731366533373466663561316664393530376532313861313537383436
+          3634306264336366386461386433303832636136613537630a313061613034636637646662396539
+          63306437643638653731613732396331393664616361383131383365393533616437333330316166
+          6462313738633736630a333432333065633530393263356565393334616162366166313433333733
+          6364
