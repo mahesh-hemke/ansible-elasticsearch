@@ -14,12 +14,12 @@
   ignore_errors: true
 
 
-- name: Copy ehttp cert file to certs directory
+- name: Copy http cert file to certs directory
   ansible.builtin.copy:
     src: '{{ certs_dir }}/http_ca.crt'
     dest: '{{ kibana_ca }}'
     owner: root
-    group: elasticsearch
+    group: kibana
     mode: '640'
     remote_src: yes
 
