@@ -1,0 +1,10 @@
+- name: Deployment of elasticsearch cluster with kibana,filebeat,Nginx
+  hosts: all
+  become: yes
+  gather_facts: true
+  remote_user: mahesh_hemke24
+  roles:
+    - 01_elasticsearch
+    - 02_kibana
+    - 03_nginx 
+    - 04_filebeat
