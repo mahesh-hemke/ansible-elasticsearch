@@ -1,0 +1,8 @@
+---
+# handlers file for filebeat
+- name: flb_restart
+  service:
+    name: filebeat
+    enabled: true
+    state: restarted
+  listen: "flb_restart"
