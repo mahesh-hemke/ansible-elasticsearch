@@ -45,8 +45,8 @@
     group: elasticsearch
     mode: '750'
   with_items:
-   - { '{{ certs_dir }}' }
-   - { '{{ ca }}' }
+   - "{ '{{ certs_dir }}' }"
+   - "{ '{{ ca }}' }"
    
 ### This is to be installed on hosts for ansible expect module  
 - name: Install pexpect package

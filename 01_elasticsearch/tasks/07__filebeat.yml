@@ -1,4 +1,4 @@
-- name: Installing packages required for nginx
+- name: Installing packages required for filebeat
   yum:
     name: '{{ item }}'
     state: present
@@ -26,8 +26,7 @@
     dest: /etc/filebeat/{{ item.dest }}
   with_items:
     - { src: filebeat.yml.j2 , dest: filebeat.yml }
-    - { src: sys_module.j2 , dest: modules.d/system.yml }
-    
+    - { src: sys_module.j2 , dest: modules.d/system.yml } 
   notify: 
     - flb_restart
 
@@ -36,5 +35,9 @@
 
 - name: Setup filebeat
   shell: filebeat setup
-  notify: 
-    - flb_restart
+  
+- name: Filebeat restart
+  service:
+    name: filebeat
+    enabled: true
+    state: restarted
