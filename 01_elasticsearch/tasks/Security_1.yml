@@ -137,8 +137,8 @@
   notify: 
     - els_restart
 
-#- name: Flush the handlers
-#  ansible.builtin.meta: flush_handlers
+- name: Flush the handlers
+  ansible.builtin.meta: flush_handlers
 
 ### Securing Kibana
 - name: Copy http cert file to certs directory
@@ -170,8 +170,8 @@
     dest: /etc/kibana/kibana.yml
   notify: Kbn_restart
 
-#- name: Flush the handlers
-#  ansible.builtin.meta: flush_handlers
+- name: Flush the handlers
+  ansible.builtin.meta: flush_handlers
 
 ### Reset users password
 - name: Reseting elastic and kibana_system users passwd
