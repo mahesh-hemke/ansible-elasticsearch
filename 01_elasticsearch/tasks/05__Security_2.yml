@@ -1,4 +1,4 @@
-- name: Copy cert file from node-5 to  remaining elastic nodes
+- name: Copy cert file from node-5 to {{ ansible_hostname }}
   ansible.builtin.copy:
     src: '/home/mahesh_hemke24/{{ item.src }}'
     dest: '{{ item.dest }}'
@@ -10,18 +10,18 @@
     - { src: caa.key , dest: '{{ ca }}/caa.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
 
-- name: Stop elasticsearch service on remaining elastic nodes
+- name: Stop elasticsearch service on {{ ansible_hostname }}
   service:
     name: elasticsearch 
     state: stopped
 
 ### Generate a new certificate for the transport layer
-- name: Check that the elastic-certificates.p12 on remaining elastic nodes
+- name: Check that the elastic-certificates.p12 on {{ ansible_hostname }}
   stat:
     path: /usr/share/elasticsearch/elastic-certificates.p12
   register: stat_result
 
-- name: Import the newly created CA certificate into the Elasticsearch truststore on remaining elastic nodes
+- name: Import the newly created CA certificate into the Elasticsearch truststore on {{ ansible_hostname }}
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
     echo: true
@@ -32,7 +32,7 @@
   ignore_errors: true
   
  ### Copy the generated file to the /etc/elasticsearch/cert directory 
-- name: Copy elastic-certificates.p12 file to certs directory on remaining elastic nodes
+- name: Copy elastic-certificates.p12 file to certs directory on {{ ansible_hostname }}
   ansible.builtin.copy:
     src: /usr/share/elasticsearch/elastic-certificates.p12
     dest: '{{ certs_dir }}/elastic-certificates.p12'
@@ -42,7 +42,7 @@
     remote_src: yes
 
   ### Removing the default ketstore values   
-- name: Remove the existing keystore values for the default transport keystore and truststore on remaining elastic nodes
+- name: Remove the existing keystore values for the default transport keystore and truststore on {{ ansible_hostname }}
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     state: absent
@@ -51,7 +51,7 @@
     - xpack.security.transport.ssl.truststore.secure_password
 
 ### Adding the ketstore values with latest update
-- name: Add the existing keystore values for the default transport keystore and truststore on remaining elastic nodes
+- name: Add the existing keystore values for the default transport keystore and truststore on {{ ansible_hostname }}
   community.elastic.elastic_keystore:
     name: '{{ item }}'
     value: '{{ elastic_pass }}'
