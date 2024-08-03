@@ -63,7 +63,7 @@
 
 - name: Modifying elasticsearch.yml file on node-6
   template:
-    src: templates/els_node_6.yml.j2
+    src: templates/els_node.j2
     dest: /etc/elasticsearch/elasticsearch.yml
   notify: 
     - els_restart

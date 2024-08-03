@@ -1,17 +1,4 @@
-- name: Creating repo for elasticsearch on all elasticsearch hosts
+- name: Creating repos for elasticsearch kibana on all elasticsearch hosts a per req.
   template:
     src: templates/els_repo.j2
     dest: /etc/yum.repos.d/els.repo
-  when: ansible_hostname[8:14]|lower != 'node-1'
-
-- name: Creating repo for kibana on elastic-node-5
-  template:
-    src: templates/kibana_repo.j2
-    dest: /etc/yum.repos.d/kibana.repo
-  when: ansible_hostname[8:14]|lower == 'node-5'
-
-- name: Creating repo for filebeat on nginx node
-  template:
-    src: templates/filebeat_repo.j2
-    dest: /etc/yum.repos.d/filebeat.repo
-  when: ansible_hostname[8:14]|lower == 'node-1'

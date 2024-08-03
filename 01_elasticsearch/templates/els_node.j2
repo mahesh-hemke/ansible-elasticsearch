@@ -60,7 +60,8 @@ network.host:  {% if ansible_hostname[8:14]|lower == 'node-5' %}{{ els_node_5_ip
              {% elif ansible_hostname[8:14]|lower == 'node-6' %}{{ els_node_6_ip }}
              {% elif ansible_hostname[8:14]|lower == 'node-7' %}{{ els_node_7_ip }}
              {% endif %}
-#
+
+
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
 #
