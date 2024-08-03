@@ -8,7 +8,7 @@
 - include_tasks: 04__Security_1.yml                                                    #### Securing and configuring 1st elastic node
   when: ansible_hostname[8:14]|lower == 'node-5'      
 - include_tasks: 05__Security_2.yml                                                    #### Securing and configuring remaining elastic nodes
-  when: ansible_hostname[8:14]|lower == 'node-6' and ansible_hostname[8:14]|lower == 'node-7'     
+  when: ( ansible_hostname[8:14]|lower == 'node-6' and ansible_hostname[8:14]|lower == 'node-7' )    
 - include_tasks: 06__kibana.yml                                                        #### Securing and configuring kibana node
   when: ansible_hostname[8:14]|lower == 'node-5'
 - include_tasks: 07__filebeat.yml                                                      #### Securing and configuring filebeat node

@@ -2,12 +2,7 @@
   yum:
     name: '{{ item }}'
     state: present
-  with_items:
-    - elasticsearch
-    - java-21-openjdk
-    - python3-cryptography
-    - expect
-    - unzip
+  with_items: "{{ packages }}"
   when: ansible_hostname[8:14]|lower != 'node-1'
 
 - name: Install Kibana on elastic-node-5
