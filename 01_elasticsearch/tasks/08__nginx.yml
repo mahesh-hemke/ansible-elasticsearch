@@ -35,18 +35,7 @@
     - /etc/pki/nginx/
     - /etc/pki/nginx/private
 
-- name: Copy cert file from node-5 to - nginx node
-  ansible.builtin.copy:
-    src: '/home/mahesh_hemke24/{{ item.src }}'
-    dest: '{{ item.dest }}'
-    owner: root
-    group: root
-    mode: '640'
-  with_items:
-    - { src: caa.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_crt }}' }
-    - { src: caa.key , dest: '{{ ngx_key_dir }}/{{ ngx_key }}' }
-
-- name: Modifying nginx conf file on nginx (rhel8-1)
+- name: Modifying nginx conf file on nginx node
   template:
     src: templates/els_nginx.conf.j2
     dest: /etc/nginx/conf.d/els.conf
