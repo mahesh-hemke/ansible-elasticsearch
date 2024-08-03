@@ -1,7 +1,5 @@
 ---
 # tasks file for filebeat
 # tasks file for filebeat
-- include_tasks: repo.yml 
-  when: ansible_hostname[8:14]|lower == 'node-1'
 - include_tasks: filebeat.yml
   when: ansible_hostname[8:14]|lower == 'node-1'

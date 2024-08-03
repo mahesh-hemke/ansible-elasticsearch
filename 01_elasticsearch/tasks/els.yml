@@ -1,4 +1,4 @@
-- name: Install Elasticsearch
+- name: Install Elasticsearch and Kibana on elastic-node-5
   yum:
     name: '{{ item }}'
     state: present
@@ -8,13 +8,39 @@
     - python3-cryptography
     - expect
     - unzip
+    - kibana 
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
-- name: els start
+- name: Install Elasticsearch on remianing elastic hosts
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - elasticsearch
+    - java-21-openjdk
+    - python3-cryptography
+    - expect
+    - unzip 
+  when: ansible_hostname[8:14]|lower != 'node-5'
+
+- name: Start and enabled els service on all elastic hosts
   service:
-    name: elasticsearch 
+    name: '{{ item }}' 
     state: started
     enabled: yes
+  with_items:
+    - elasticsearch
   ignore_errors: true
+
+- name: Start and enabled els and kibana service on elastic-node-5
+  service:
+    name: '{{ item }}' 
+    state: started
+    enabled: yes
+  with_items:
+    - kibana
+  ignore_errors: true
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Creating cert directory
   ansible.builtin.file:
@@ -23,7 +49,10 @@
     owner: root
     group: elasticsearch
     mode: '750'
-
+  with_items:
+   - { '{{ certs_dir }}' }
+   - { '{{ ca }}' }
+   
 ### This is to be installed on hosts for ansible expect module  
 - name: Install pexpect package
   ansible.builtin.pip:

@@ -1,8 +1,0 @@
----
-# handlers file for kibana
-- name: Kbn_restart
-  service:
-    name: kibana
-    state: restarted
-    enabled: true
-  listen: "kbn_restart"

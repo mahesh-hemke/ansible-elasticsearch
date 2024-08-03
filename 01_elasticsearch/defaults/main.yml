@@ -1,11 +1,16 @@
 ---
-# # Certificate and keys fir ElasticSearch
+# # Certificate and keys for ElasticSearch
 transport_truststore: certs/elastic-stack-ca.p12
 transport_keystore: certs/elastic-certificates.p12
 http_keystore: /etc/elasticsearch/certs/http.p12
 certs_dir: /etc/elasticsearch/certs
 els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
 ca: /etc/elasticsearch/certs/ca
+
+# Certificate and keys for Kibana
+kibana_cert: /etc/kibana/kibana_cert.cer
+kibana_key: /etc/kibana/kibana_key.key
+kibana_ca: /etc/kibana/http_ca.crt
 
 ## Cluster name of elasticsearch
 cluster_name: dev-cluster
@@ -16,6 +21,14 @@ elastic_port: 9200
 http_host: 0.0.0.0
 transport_host: 0.0.0.0
 
+#Kibana Port
+kibana_port: 5601
+
+## Users
+elastic_user: elastic
+kibana_user: kibana_system
+
+### Encrypted Password
 elastic_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30383064363939363635663361366534363034376631373163623437303466393937616561636362
@@ -23,3 +36,20 @@ elastic_pass: !vault |
           61306336323961316163656130656630626138626433663163346432363536393234666331313433
           6662646164343466630a663435393966393366643138663536363464356665356133363236333531
           33653565373433313335353435323133356436353665376465356533313832646130
+
+### Hostnames of all elasticsearch nodes
+els_node_5: elastic-node-5
+els_node_6: elastic-node-6
+els_node_7: elastic-node-7
+#ngx_node: rhel8-1
+ngx_node: elastic-node-1
+
+### Hostnames of all kibana nodes
+kibana_node_5: elastic-node-5
+
+### IP Addresses of all elasticsearch nodes
+els_node_5_ip: 10.142.0.15
+els_node_6_ip: 10.142.0.16
+els_node_7_ip: 10.182.0.7
+#ngx_node_ip: 10.182.0.2
+ngx_node_ip: 10.142.0.11

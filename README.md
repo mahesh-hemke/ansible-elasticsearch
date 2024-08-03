@@ -1,5 +1,5 @@
 # ansible-elasticsearch
-This is repo to deploy the Elasticsearch  using Ansible
+This is repo to deploy the Elasticsearch using Ansible
 
 Elasticsearch Nodes
   1. elastic-node-5
