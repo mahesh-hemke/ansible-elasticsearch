@@ -144,13 +144,13 @@ output.elasticsearch:
   loadbalance: true
   
   # Certificate for SSL client authentication
-  ssl.certificate: "{{ certs_dir }}/{{ els_crt }}"
+  ssl.certificate: "{{ ngx_certs_dir }}/{{ ngx_crt }}"
 
   # Client Certificate Key
-  ssl.key: "{{ key_dir }}/{{ els_key }}"
+  ssl.key: "{{ ngx_key_dir }}/{{ ngx_key }}"
 
   # List of root certificates for HTTPS server verifications
-  ssl.certificate_authorities: ["{{ certs_dir }}/{{ els_ca_crt }}"]
+  ssl.certificate_authorities: ["{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}"]
 
   # Performance preset - one of "balanced", "throughput", "scale",
   # "latency", or "custom".
