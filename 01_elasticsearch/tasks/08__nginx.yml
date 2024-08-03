@@ -1,4 +1,4 @@
-- name: Installing packages required for nginx
+- name: Installing packages required for nginx on {{ ansible_hostname }}
   yum:
     name: '{{ item }}'
     state: present
@@ -6,7 +6,7 @@
     - nginx  
     - httpd-tools
 
-- name: Creating secure passwd for elastic user to store in nginx conf file
+- name: Creating secure passwd for elastic user to store in nginx conf file on {{ ansible_hostname }}
   ansible.builtin.expect:
     command: htpasswd -c /etc/nginx/conf.d/elastic_credentials elastic
     echo: true
@@ -15,7 +15,7 @@
       'Re-type new password(.*)': '{{ elastic_pass }}'
   ignore_errors: true
 
-- name: Creating secure passwd for kibana user to store in nginx conf file
+- name: Creating secure passwd for kibana user to store in nginx conf file on {{ ansible_hostname }}
   ansible.builtin.expect:
     command: htpasswd  /etc/nginx/conf.d/elastic_credentials kibana_system
     echo: true
@@ -24,7 +24,7 @@
       'Re-type new password(.*)': '{{ elastic_pass }}'
   ignore_errors: true
 
-- name: Creating cert directory on - nginx node
+- name: Creating cert directory on {{ ansible_hostname }}
   ansible.builtin.file:
     path: '{{ item }}'
     state: directory
@@ -35,7 +35,7 @@
     - /etc/pki/nginx/
     - /etc/pki/nginx/private
 
-- name: Modifying nginx conf file on nginx node
+- name: Modifying nginx conf file on {{ ansible_hostname }}
   template:
     src: templates/els_nginx.conf.j2
     dest: /etc/nginx/conf.d/els.conf
