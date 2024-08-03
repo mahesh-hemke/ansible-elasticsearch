@@ -61,7 +61,7 @@
   notify: 
     - els_restart
 
-- name: Modifying elasticsearch.yml file on node-6
+- name: Modifying elasticsearch.yml file on {{ ansible_hostname }}
   template:
     src: templates/els_node.j2
     dest: /etc/elasticsearch/elasticsearch.yml

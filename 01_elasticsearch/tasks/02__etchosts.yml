@@ -1,4 +1,4 @@
-- name: Adding hosts entry in hosts file elastic-node-5
+- name: Adding hosts entry in hosts file of {{ ansible_hostname }}
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -8,7 +8,7 @@
     - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-5'
     
-- name: Adding hosts entry in hosts file elastic-node-6
+- name: Adding hosts entry in hosts file of {{ ansible_hostname }}
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -18,7 +18,7 @@
     - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-6'
 
-- name: Adding hosts entry in hosts file elastic-node-7
+- name: Adding hosts entry in hosts file of {{ ansible_hostname }}
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -28,7 +28,7 @@
     - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-7'
 
-- name: Adding hosts entry in hosts file nginx node
+- name: Adding hosts entry in hosts file of {{ ansible_hostname }}
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'

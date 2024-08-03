@@ -1,11 +1,11 @@
-- name: Install Elasticsearch on all  elastic hosts
+- name: Install Elasticsearch on all elastic nodes
   yum:
     name: '{{ item }}'
     state: present
   with_items: "{{ packages }}"
   when: ansible_hostname[8:14]|lower != 'node-1'
 
-- name: Install Kibana on elastic-node-5
+- name: Install Kibana on {{ ansible_hostname }}
   yum:
     name: '{{ item }}'
     state: present
@@ -22,7 +22,7 @@
     - elasticsearch
   ignore_errors: true
 
-- name: Start and enabled kibana service on elastic-node-5
+- name: Start and enabled kibana service on {{ ansible_hostname }}
   service:
     name: '{{ item }}' 
     state: started

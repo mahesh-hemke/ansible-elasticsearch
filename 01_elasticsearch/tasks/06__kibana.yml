@@ -1,5 +1,5 @@
 ### Securing Kibana
-- name: Copy http cert file to certs directory
+- name: Copy http cert file to certs directory {{ ansible_hostname }}
   ansible.builtin.copy:
     src: '{{ certs_dir }}/http_ca.crt'
     dest: '{{ kibana_ca }}'
@@ -22,7 +22,7 @@
   shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys -password pass:{{ elastic_pass }} > {{ kibana_cert }}
   when: not stat_result.stat.exists
 
-- name: Modifying kibana.yml file on kibana node elastic-node-5
+- name: Modifying kibana.yml file on kibana node {{ ansible_hostname }}
   template:
     src: templates/kibana.j2
     dest: /etc/kibana/kibana.yml
@@ -32,7 +32,7 @@
   ansible.builtin.meta: flush_handlers
 
 ### Reset users password
-- name: Reseting elastic and kibana_system users passwd
+- name: Reseting elastic and kibana_system users passwd {{ ansible_hostname }}
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u {{ item }} -i
     echo: true

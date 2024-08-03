@@ -1,4 +1,4 @@
-- name: Stop elasticsearch service
+- name: Stop elasticsearch service on {{ ansible_hostname }}
   service:
     name: elasticsearch
     state: stopped
