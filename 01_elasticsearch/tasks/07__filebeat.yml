@@ -16,9 +16,9 @@
     group: root
     mode: '640'
   with_items:
-    - { src: caa.crt , dest: '{{ certs_dir }}/{{ els_crt }}' }
-    - { src: caa.key , dest: '{{ key_dir }}/{{ els_key }}' }
-    - { src: http_ca.crt , dest: '{{ certs_dir }}/{{ els_ca_crt }}' }
+    - { src: caa.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_crt }}' }
+    - { src: caa.key , dest: '{{ ngx_key_dir }}/{{ ngx_key }}' }
+    - { src: http_ca.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}' }
 
 - name: Modifying filebeat module file and yml file on nginx (rhel8-1)
   template:
@@ -30,14 +30,10 @@
   notify: 
     - flb_restart
 
-- name: FLush the handlers
+- name: Flush the handlers
   ansible.builtin.meta: flush_handlers
 
 - name: Setup filebeat
   shell: filebeat setup
-
-- name: restart the filebeat service
-  service: 
-    name: filebeat 
-    enabled: true
-    state: restarted
+  notify: 
+    - flb_restart
