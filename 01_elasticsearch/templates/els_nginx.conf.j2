@@ -5,7 +5,7 @@ upstream elasticsearch {
 }
 
 upstream kibana {
-    server {{ kibana_node_5_ip }}:{{ kibana_port }};
+    server {{ els_node_5_ip }}:{{ kibana_port }};
 }
 
 server {
