@@ -7,5 +7,5 @@
   when: ansible_hostname[8:14]|lower != 'node-1'      
 - include_tasks: Security_1.yml                     #### Securing 1st node
   when: ansible_hostname[8:14]|lower == 'node-5'      
-- include_tasks: Security_2.yml                     #### Securing remaining nodes
-  when: ansible_hostname[8:14]|lower == 'node-6' and ansible_hostname[8:14]|lower == 'node-7'      
+#- include_tasks: Security_2.yml                     #### Securing remaining nodes
+#  when: ansible_hostname[8:14]|lower == 'node-6' and ansible_hostname[8:14]|lower == 'node-7'      
