@@ -1,4 +1,4 @@
-- name: Install Elasticsearch and Kibana on elastic-node-5
+- name: Install Elasticsearch on all  elastic hosts
   yum:
     name: '{{ item }}'
     state: present
@@ -8,20 +8,15 @@
     - python3-cryptography
     - expect
     - unzip
-    - kibana 
-  when: ansible_hostname[8:14]|lower == 'node-5'
+  when: ansible_hostname[8:14]|lower != 'node-1'
 
-- name: Install Elasticsearch on remianing elastic hosts
+- name: Install Kibana on elastic-node-5
   yum:
     name: '{{ item }}'
     state: present
   with_items:
-    - elasticsearch
-    - java-21-openjdk
-    - python3-cryptography
-    - expect
-    - unzip 
-  when: ansible_hostname[8:14]|lower != 'node-5'
+    - kibana
+  when: ansible_hostname[8:14]|lower == 'node-5'
 
 - name: Start and enabled els service on all elastic hosts
   service:
@@ -32,7 +27,7 @@
     - elasticsearch
   ignore_errors: true
 
-- name: Start and enabled els and kibana service on elastic-node-5
+- name: Start and enabled kibana service on elastic-node-5
   service:
     name: '{{ item }}' 
     state: started

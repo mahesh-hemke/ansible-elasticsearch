@@ -182,9 +182,9 @@
       'Please confirm that you would like to continue(.*)': 'y'
       'Enter password for(.*)': '{{ elastic_pass }}'
       'Re-enter password for(.*)': '{{ elastic_pass }}'
-    with_items:
-     - elastic
-     - kibana_system
+  with_items:
+    - elastic
+    - kibana_system
 
 ### Fetching desired file on Ansible controller node
 - name: Fetching cert files
