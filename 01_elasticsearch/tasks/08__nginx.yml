@@ -24,17 +24,6 @@
       'Re-type new password(.*)': '{{ elastic_pass }}'
   ignore_errors: true
 
-- name: Creating cert directory on {{ ansible_hostname }}
-  ansible.builtin.file:
-    path: '{{ item }}'
-    state: directory
-    owner: root
-    group: root
-    mode: '750'
-  with_items:
-    - /etc/pki/nginx/
-    - /etc/pki/nginx/private
-
 - name: Modifying nginx conf file on {{ ansible_hostname }}
   template:
     src: templates/els_nginx.conf.j2
