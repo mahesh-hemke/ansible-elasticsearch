@@ -8,6 +8,17 @@
 - name: enable system module on filebeat server on {{ ansible_hostname }}
   shell: filebeat modules enable system
 
+- name: Creating directory
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: elasticsearch
+    mode: '750'
+  with_items:
+   - "{ '{{ ngx_certs_dir }}' }"
+   - "{ '{{ ngx_key_dir }}' }"
+  
 - name: Copy cert file for nginx and filebeat on {{ ansible_hostname }}
   ansible.builtin.copy:
     src: '/home/mahesh_hemke24/{{ item.src }}'

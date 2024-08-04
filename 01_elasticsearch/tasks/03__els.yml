@@ -34,7 +34,7 @@
 
 - name: Creating cert directory
   ansible.builtin.file:
-    path: '{{ certs_dir }}'
+    path: '{{ item }}'
     state: directory
     owner: root
     group: elasticsearch
