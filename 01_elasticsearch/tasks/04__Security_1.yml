@@ -156,10 +156,10 @@
     recurse: yes
     group: elasticsearch
     mode: '750'
-  with_item:
+  with_items:
     - { '{{ certs_dir }}' }
     - { '{{ ca }}' }
-    
+
 #### Modyfying the elasticsearch.yml with proper configurations
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
