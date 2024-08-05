@@ -151,7 +151,7 @@
 
 - name: Change file ownership, group and permissions
   ansible.builtin.file:
-    path: '{{ certs_dir }}' 
+    path: '{{ item }}' 
     owner: root
     recurse: yes
     group: elasticsearch
@@ -159,6 +159,7 @@
   with_item:
     - { '{{ certs_dir }}' }
     - { '{{ ca }}' }
+    
 #### Modyfying the elasticsearch.yml with proper configurations
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
