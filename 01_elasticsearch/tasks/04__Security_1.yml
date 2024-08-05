@@ -92,7 +92,7 @@
     src: templates/expect.exp
     dest: '{{ certs_dir }}/expect.exp'
 
-- name: Check that the elastic-certificates.p12 on {{ ansible_hostname }}
+- name: Check that the elasticsearch-ssl-http.zip on {{ ansible_hostname }}
   stat:
     path: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
   register: stat_result
@@ -155,8 +155,10 @@
     owner: root
     recurse: yes
     group: elasticsearch
-    mode: '640'
-
+    mode: '750'
+  with_item:
+    - { '{{ certs_dir }}' }
+    - { '{{ ca }}' }
 #### Modyfying the elasticsearch.yml with proper configurations
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
