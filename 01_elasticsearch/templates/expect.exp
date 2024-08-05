@@ -25,7 +25,7 @@ expect "## Do you wish to generate one certificate per node(.*)"
 send "y\r"
 
 expect "## What is the name of node #1(.*)"
-send "elastic-node-1\r"
+send "elastic-node-5\r"
 
 expect "## Which hostnames will be used to connect to elastic-node-1(.*)" 
 foreach hostname $hostnames {
@@ -50,7 +50,7 @@ expect "Generate additional certificates(.*)"
 send "y\r"
 
 expect "## What is the name of node #2(.*)"
-send "elastic-node-2\r"
+send "elastic-node-6\r"
 
 expect "## Which hostnames will be used to connect to elastic-node-2(.*)" 
 foreach hostname $hostnames {
@@ -74,7 +74,7 @@ send "N\r"
 expect "Generate additional certificates(.*)"
 send "y\r"
 expect "## What is the name of node #2(.*)"
-send "elastic-node-3\r"
+send "elastic-node-7\r"
 
 expect "## Which hostnames will be used to connect to elastic-node-3(.*)" 
 foreach hostname $hostnames {
