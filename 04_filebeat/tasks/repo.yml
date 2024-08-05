@@ -1,4 +1,0 @@
-- name: Creating repo for filebeat
-  template:
-    src: templates/filebeat_repo.j2
-    dest: /etc/yum.repos.d/filebeat.repo

@@ -1,16 +1,16 @@
-- name: Stop elasticsearch service
+- name: Stop elasticsearch service on {{ ansible_hostname }}
   service:
     name: elasticsearch
     state: stopped
   ignore_errors: true
 
+###1: Generate a new self-signed CA certificate
+### Using Elastic certificate utility to configure a self-signed CA certificate.
 - name: Check that the elastic-stack-ca.zip exists
   stat:
     path: /usr/share/elasticsearch/elastic-stack-ca.zip
   register: stat_result
 
-###1: Generate a new self-signed CA certificate
-### Using Elastic certificate utility to configure a self-signed CA certificate.
 - name: Generate a CA certificate using the provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
@@ -40,12 +40,12 @@
     group: elasticsearch
     mode: '750'
 
+### Generating certificate /etc/elasticsearch/certs/ca/caa.crt and certificate authority’s private key /etc/elasticsearch/certs/ca/caa.key
 - name: Check that the elastic-certificates.p12
   stat:
     path: '{{ certs_dir }}/ca/caa.key'
   register: stat_result
 
-### Generating certificate /etc/elasticsearch/certs/ca/caa.crt and certificate authority’s private key /etc/elasticsearch/certs/ca/caa.key
 - name: Creating certificate using openssl
   ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,DNS:elastic-node-7,IP:10.142.0.15,IP:10.142.0.16,IP:10.182.0.7"
   when: not stat_result.stat.exists
@@ -61,12 +61,12 @@
     - '{{ certs_dir }}/ca/caa.key'
     - '{{ certs_dir }}/ca/caa.crt'
 
-- name: Check if aliase is present
-  ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass 7rt*5-+gyppFzyaEeDSV -alias new-caa -list | grep -i new-caa |cut -d',' -f1
-  register: aliase
-
 ### Importing the newly created CA certificate into the Elasticsearch truststore. 
 ### This step ensures that elasticsearch cluster trusts the new CA certificate.
+- name: Check if aliase is present
+  ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -list | grep -i new-caa |cut -d',' -f1
+  register: aliase
+
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
   when: aliase.stdout != "new-caa"
@@ -83,13 +83,12 @@
     group: elasticsearch
     mode: '640'
 
-- name: Check that the elastic-certificates.p12
+###2: Generate a new certificate for the transport layer
+- name: Check that the elastic-certificates.p12 exists
   stat:
     path: /usr/share/elasticsearch/elastic-certificates.p12
   register: stat_result
 
-###2: Generate a new certificate for the transport layer
-### Generate a new certificate for the transport layer
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
@@ -130,18 +129,18 @@
   notify: 
     - els_restart
 
-#### Modyfying the elasticsearch.yml file with proper configurations
-- name: Modifying elasticsearch.yml file on node-5
+#### Modyfying the elasticsearch.yml with proper configurations
+- name: Modifying elasticsearch.yml file on elastic-node-5
   template:
-    src: templates/els_node_5.yml.j2
+    src: templates/els_node.j2
     dest: /etc/elasticsearch/elasticsearch.yml
   notify: 
     - els_restart
 
-- name: FLush the handlers
+- name: Flush the handlers
   ansible.builtin.meta: flush_handlers
 
-### Fetching desired file on Ansible controller node
+### Fetching required files on Ansible controller node
 - name: Fetching cert files
   ansible.builtin.fetch:
     src: "{{ item }}"
@@ -152,13 +151,3 @@
     - '{{ ca }}/caa.key'
     - '{{ certs_dir }}/elastic-stack-ca.p12'
     - '{{ certs_dir }}/http_ca.crt'
-
-### Reset the kibana_system users password
-- name: Reseting elastic users passwd
-  ansible.builtin.expect:
-    command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -i
-    echo: true
-    responses:
-      'Please confirm that you would like to continue(.*)': 'y'
-      'Enter password for(.*)': '{{ elastic_pass }}'
-      'Re-enter password for(.*)': '{{ elastic_pass }}'

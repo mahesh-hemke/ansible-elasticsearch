@@ -1,0 +1,57 @@
+### Securing Kibana
+- name: Copy http cert file to certs directory {{ ansible_hostname }}
+  ansible.builtin.copy:
+    src: '{{ certs_dir }}/http_ca.crt'
+    dest: '{{ kibana_ca }}'
+    owner: root
+    group: kibana
+    mode: '640'
+    remote_src: yes
+
+#### Creating Keys and certificates for Kibana
+- name: Check that the elastic-certificates.p12 exists
+  stat:
+    path: '{{ kibana_key }}'
+  register: stat_result
+
+- name: Creating a key for Kibana
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ elastic_pass }}  > {{ kibana_key }}
+  when: not stat_result.stat.exists
+
+- name: Creating a Cert for Kibana
+  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys -password pass:{{ elastic_pass }} > {{ kibana_cert }}
+  when: not stat_result.stat.exists
+
+- name: Modifying kibana.yml file on kibana node {{ ansible_hostname }}
+  template:
+    src: templates/kibana.j2
+    dest: /etc/kibana/kibana.yml
+  notify: Kbn_restart
+
+- name: Flush the handlers
+  ansible.builtin.meta: flush_handlers
+
+### Reset users password
+- name: Reseting elastic and kibana_system users passwd {{ ansible_hostname }}
+  ansible.builtin.expect:
+    command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u {{ item }} -i
+    echo: true
+    responses:
+      'Please confirm that you would like to continue(.*)': 'y'
+      'Enter password for(.*)': '{{ elastic_pass }}'
+      'Re-enter password for(.*)': '{{ elastic_pass }}'
+  with_items:
+    - elastic
+    - kibana_system
+
+### Fetching required files on Ansible controller node
+- name: Fetching cert files
+  ansible.builtin.fetch:
+    src: "{{ item }}"
+    dest: /home/mahesh_hemke24/
+    flat: true
+  with_items:
+    - '{{ ca }}/caa.crt'
+    - '{{ ca }}/caa.key'
+    - '{{ certs_dir }}/elastic-stack-ca.p12'
+    - '{{ certs_dir }}/http_ca.crt'

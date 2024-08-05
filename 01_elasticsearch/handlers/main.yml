@@ -6,3 +6,24 @@
     enabled: true
     state: restarted
   listen: "els_restart"
+
+- name: Kbn_restart
+  service:
+    name: kibana
+    state: restarted
+    enabled: true
+  listen: "kbn_restart"
+
+- name: ngx_restart
+  service:
+    name: nginx
+    enabled: true
+    state: restarted
+  listen: "ngx_restart"
+
+- name: flb_restart
+  service:
+    name: filebeat
+    enabled: true
+    state: restarted
+  listen: "flb_restart"

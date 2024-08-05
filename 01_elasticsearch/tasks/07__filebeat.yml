@@ -1,0 +1,54 @@
+- name: Installing packages required for filebeat on {{ ansible_hostname }}
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - filebeat
+
+- name: enable system module on filebeat server on {{ ansible_hostname }}
+  shell: filebeat modules enable system
+
+- name: Creating cert directory on {{ ansible_hostname }}
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '750'
+  with_items:
+    - /etc/pki/nginx/
+    - /etc/pki/nginx/private
+  
+- name: Copy cert file for nginx and filebeat on {{ ansible_hostname }}
+  ansible.builtin.copy:
+    src: '/home/mahesh_hemke24/{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: root
+    group: root
+    mode: '640'
+  with_items:
+    - { src: caa.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_crt }}' }
+    - { src: caa.key , dest: '{{ ngx_key_dir }}/{{ ngx_key }}' }
+    - { src: http_ca.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}' }
+
+- name: Modifying filebeat module file and yml file on {{ ansible_hostname }}
+  template:
+    src: templates/{{ item.src }}
+    dest: /etc/filebeat/{{ item.dest }}
+  with_items:
+    - { src: filebeat.yml.j2 , dest: filebeat.yml }
+    - { src: sys_module.j2 , dest: modules.d/system.yml } 
+  notify: 
+    - flb_restart
+
+- name: Flush the handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Setup filebeat on {{ ansible_hostname }}
+  shell: filebeat setup
+  
+- name: Filebeat restart on {{ ansible_hostname }}
+  service:
+    name: filebeat
+    enabled: true
+    state: restarted

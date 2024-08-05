@@ -1,0 +1,4 @@
+- name: Creating repos for elasticsearch kibana on all elasticsearch hosts.
+  template:
+    src: templates/els_repo.j2
+    dest: /etc/yum.repos.d/els.repo

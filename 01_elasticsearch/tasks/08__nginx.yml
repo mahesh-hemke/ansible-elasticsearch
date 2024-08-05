@@ -1,0 +1,35 @@
+- name: Installing packages required for nginx on {{ ansible_hostname }}
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - nginx  
+    - httpd-tools
+
+- name: Creating secure passwd for elastic user to store in nginx conf file on {{ ansible_hostname }}
+  ansible.builtin.expect:
+    command: htpasswd -c /etc/nginx/conf.d/elastic_credentials elastic
+    echo: true
+    responses:
+      'New password(.*)': '{{ elastic_pass }}'
+      'Re-type new password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
+
+- name: Creating secure passwd for kibana user to store in nginx conf file on {{ ansible_hostname }}
+  ansible.builtin.expect:
+    command: htpasswd  /etc/nginx/conf.d/elastic_credentials kibana_system
+    echo: true
+    responses:
+      'New password(.*)': '{{ elastic_pass }}'
+      'Re-type new password(.*)': '{{ elastic_pass }}'
+  ignore_errors: true
+
+- name: Modifying nginx conf file on {{ ansible_hostname }}
+  template:
+    src: templates/els_nginx.conf.j2
+    dest: /etc/nginx/conf.d/els.conf
+  notify: 
+    - ngx_restart
+
+- name: Flush the handlers
+  ansible.builtin.meta: flush_handlers

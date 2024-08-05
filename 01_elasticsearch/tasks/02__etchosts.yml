@@ -1,31 +1,34 @@
-- name: Adding hosts entry in hosts file node-5
+- name: Adding hosts entry in hosts file of elastic-node-5
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
     - '{{ els_node_6_ip }} {{ els_node_6 }}'
     - '{{ els_node_7_ip }} {{ els_node_7 }}'
+    - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-5'
     
-- name: Adding hosts entry in hosts file node-6
+- name: Adding hosts entry in hosts file of elastic-node-6
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
     - '{{ els_node_5_ip }} {{ els_node_5 }}'
     - '{{ els_node_7_ip }} {{ els_node_7 }}'
+    - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-6'
 
-- name: Adding hosts entry in hosts file node-7
+- name: Adding hosts entry in hosts file of elastic-node-7
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
   with_items:
     - '{{ els_node_5_ip }} {{ els_node_5 }}'
     - '{{ els_node_6_ip }} {{ els_node_6 }}'
+    - '{{ ngx_node_ip }} {{ ngx_node }}'
   when: ansible_hostname[8:14]|lower == 'node-7'
 
-- name: Adding hosts entry in hosts file node-7
+- name: Adding hosts entry in hosts file of elastic-node-1
   lineinfile:
     path: /etc/hosts
     line: '{{ item }}'
@@ -33,4 +36,4 @@
     - '{{ els_node_5_ip }} {{ els_node_5 }}'
     - '{{ els_node_6_ip }} {{ els_node_6 }}'
     - '{{ els_node_7_ip }} {{ els_node_7 }}'
-  when: ansible_hostname[0:5]|lower == 'node-1'
+  when: ansible_hostname[8:14]|lower == 'node-1'

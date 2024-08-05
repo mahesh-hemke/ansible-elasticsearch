@@ -5,14 +5,14 @@ upstream elasticsearch {
 }
 
 upstream kibana {
-    server {{ kibana_node_5_ip }}:{{ kibana_port }};
+    server {{ els_node_5_ip }}:{{ kibana_port }};
 }
 
 server {
    listen {{ ngx_els_port }} ssl;
    server_name _;
-   ssl_certificate /etc/pki/nginx/{{ els_crt }};
-   ssl_certificate_key /etc/pki/nginx/private/{{ els_key }};
+   ssl_certificate {{ ngx_certs_dir }}/{{ ngx_crt }};
+   ssl_certificate_key {{ ngx_key_dir }}/{{ ngx_key }};
 
    location / {
       proxy_pass https://elasticsearch;
@@ -24,8 +24,8 @@ server {
 server {
    listen {{ ngx_kibana_port }} ssl;
    server_name _;
-   ssl_certificate /etc/pki/nginx/{{ els_crt }};
-   ssl_certificate_key /etc/pki/nginx/private/{{ els_key }};
+   ssl_certificate {{ ngx_certs_dir }}/{{ ngx_crt }};
+   ssl_certificate_key {{ ngx_key_dir }}/{{ ngx_key }};
 
    location / {
       proxy_pass https://kibana;

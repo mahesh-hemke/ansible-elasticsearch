@@ -1,13 +1,19 @@
 ---
 # tasks file for elasticsearch
-- include_tasks: repo.yml                             #### Confuration of dnf repo file for packages
+- include_tasks: 01__repo.yml                                                          #### Confuration of dnf repo file for package mgmt
   when: ansible_hostname[8:14]|lower != 'node-1'
-- include_tasks: etchosts.yml                         #### Adding hosts entries of other nodes
-- include_tasks: els.yml                              #### Installation of Elasticsearch with other pkg and modyfying the els yml file
+- include_tasks: 02__etchosts.yml                                                      #### Adding hosts entries of other nodes
+- include_tasks: 03__els.yml                                                           #### Installation of Elasticsearch,Kibana with other pkg
   when: ansible_hostname[8:14]|lower != 'node-1'      
-- include_tasks: securing_node_5.yml
-  when: ansible_hostname[8:14]|lower == 'node-5'      #### Securing node with certificates node-5
-- include_tasks: securing_node_6.yml
-  when: ansible_hostname[8:14]|lower == 'node-6'      #### Securing node with certificates node-6
-- include_tasks: securing_node_7.yml
-  when: ansible_hostname[8:14]|lower == 'node-7'      #### Securing node with certificates node-7
+- include_tasks: 04__Security_1.yml                                                    #### Securing and configuring 1st elastic node
+  when: ansible_hostname[8:14]|lower == 'node-5'      
+- include_tasks: 05__Security_2.yml                                                    #### Securing and configuring remaining elastic nodes
+  when: ansible_hostname[8:14]|lower == 'node-6'    
+- include_tasks: 05__Security_2.yml                                                    #### Securing and configuring remaining elastic nodes
+  when: ansible_hostname[8:14]|lower == 'node-7'    
+- include_tasks: 06__kibana.yml                                                        #### Securing and configuring kibana node
+  when: ansible_hostname[8:14]|lower == 'node-5'
+- include_tasks: 07__filebeat.yml                                                      #### Securing and configuring filebeat node
+  when: ansible_hostname[8:14]|lower == 'node-1'
+- include_tasks: 08__nginx.yml                                                         #### Securing and configuring nginx node
+  when: ansible_hostname[8:14]|lower == 'node-1'

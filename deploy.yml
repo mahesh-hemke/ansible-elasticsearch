@@ -5,6 +5,3 @@
   remote_user: mahesh_hemke24
   roles:
     - 01_elasticsearch
-    - 02_kibana
-    - 03_nginx 
-    - 04_filebeat
