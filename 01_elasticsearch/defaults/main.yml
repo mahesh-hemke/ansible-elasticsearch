@@ -9,7 +9,7 @@ els_dir: /usr/share/elasticsearch/
 els_dir2: /usr/share/elasticsearch/elasticsearch
 ca: /etc/elasticsearch/certs/ca
 home: /home/mahesh_hemke24/
-
+kibana_zip: /usr/share/elasticsearch/kibana-cert-bundle.zip
 # Certificate and keys for Kibana
 kibana_cert: /etc/kibana/kibana-server.crt
 kibana_key: /etc/kibana/kibana-server.key

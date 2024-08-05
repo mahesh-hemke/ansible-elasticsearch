@@ -1,7 +1,7 @@
 #### Creating Keys and certificates for Kibana
 - name: Check that the elastic-certificates.p12 exists
   stat:
-    path: '{{ kibana_key }}'
+    path: '{{ kibana_zip }}'
   register: stat_result
 
 - name: Generating certificate bundle for the Kibana server
@@ -10,6 +10,7 @@
     echo: true
     responses:
       'Please enter the desired output file(.*)': 'kibana-cert-bundle.zip'
+  when: not stat_result.stat.exists
 
 ### Unzip the file
 - name: Unarchive a kibana-cert-bundle.zip file
