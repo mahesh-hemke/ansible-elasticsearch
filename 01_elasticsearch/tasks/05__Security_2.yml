@@ -74,6 +74,7 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+    - xpack.security.http.ssl.keystore.secure_password
 
 ### Adding the ketstore values with latest update
 - name: Add the existing keystore values for the default transport keystore and truststore on {{ ansible_hostname }}
@@ -83,6 +84,7 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+    - xpack.security.http.ssl.keystore.secure_password
   notify: 
     - els_restart
 
