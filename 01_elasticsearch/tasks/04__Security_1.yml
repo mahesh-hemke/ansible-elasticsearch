@@ -87,10 +87,19 @@
     path: '{{ certs_dir }}/ca/ca.key'
   register: stat_result
 
+- name: Modifying elasticsearch.yml file on elastic-node-5
+  template:
+    src: templates/expect.exp
+    dest: '{{ certs_dir }}/expect.exp'
+
+- name: Check that the elastic-certificates.p12 on {{ ansible_hostname }}
+  stat:
+    path: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
+  register: stat_result
+  
 - name: Execute expect script to generate certificate for http layer
-  ansible.builtin.shell: /usr/bin/expect templates/expect.exp
-  args:
-    executable: /bin/bash
+  ansible.builtin.shell: /usr/bin/expect {{ certs_dir }}/expect.exp
+  when: not stat_result.stat.exists
 
 - name: Remove old http.p12
   ansible.builtin.file:
