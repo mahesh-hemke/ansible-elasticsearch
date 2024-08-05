@@ -174,13 +174,13 @@
 ### Fetching required files on Ansible controller node
 - name: Fetching cert files
   ansible.builtin.fetch:
-    src: "{{ item }}"
-    dest: /home/mahesh_hemke24/
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     flat: true
   with_items:
-    - '{{ ca }}/ca.crt'
-    - '{{ ca }}/ca.key'
-    - '{{ certs_dir }}/elastic-stack-ca.p12'
-    - '{{ certs_dir }}/http_ca.crt'
-    - '{{ els_dir }}/elasticsearch/{{ els_node_6 }}/http.p12'
-    - '{{ els_dir }}/elasticsearch/{{ els_node_7 }}/http.p12'
+    - { src: '{{ ca }}/ca.crt' , dest: '{{ home }}' }
+    - { src: '{{ ca }}/ca.key' , dest: '{{ home }}' } 
+    - { src: '{{ transport_truststore }}' , dest: '{{ home }}' }
+    - { src: '{{ certs_dir }}/http_ca.crt' , dest: '{{ home }}' }
+    - { src: '{{ els_dir2 }}/{{ els_node_6 }}/http.p12' , dest: '{{ home }}/{{ els_node_6 }}/' }
+    - { src: '{{ els_dir2 }}/{{ els_node_7 }}/http.p12' , dest: '{{ home }}/{{ els_node_7 }}/' } 

@@ -1,13 +1,14 @@
 ---
 # # Certificate and keys for ElasticSearch
-transport_truststore: certs/elastic-stack-ca.p12
-transport_keystore: certs/elastic-certificates.p12
+transport_truststore: /etc/elasticsearch/certs/elastic-stack-ca.p12
+transport_keystore: /etc/elasticsearch/certs/elastic-certificates.p12
 http_keystore: /etc/elasticsearch/certs/http.p12
 certs_dir: /etc/elasticsearch/certs
 els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
 els_dir: /usr/share/elasticsearch/
+els_dir2: /usr/share/elasticsearch/elasticsearch
 ca: /etc/elasticsearch/certs/ca
-
+home: /home/mahesh_hemke24/
 
 # Certificate and keys for Kibana
 kibana_cert: /etc/kibana/kibana-server.crt
