@@ -1,4 +1,13 @@
-- name: Copy cert file from node-5 to {{ ansible_hostname }}
+- name: Remove old file if exists
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/elasticsearch/certs/http.p12
+    - '{{ ca }}/ca.crt'
+    - '{{ ca }}/ca.key'
+  
+- name: Copy cert file from node-5 to elastic-node-6
   ansible.builtin.copy:
     src: '/home/mahesh_hemke24/{{ item.src }}'
     dest: '{{ item.dest }}'
@@ -6,9 +15,25 @@
     group: elasticsearch
     mode: '640'
   with_items:
-    - { src: caa.crt , dest: '{{ ca }}/caa.crt' }
-    - { src: caa.key , dest: '{{ ca }}/caa.key' }
+    - { src: ca.crt , dest: '{{ ca }}/ca.crt' }
+    - { src: ca.key , dest: '{{ ca }}/ca.key' }
     - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
+    - { src: '{{ els_node_6 }}/http.p12', dest: '{{ certs_dir }}/http.p12'}
+  when: ansible_hostname[8:14]|lower == 'node-6'
+
+- name: Copy cert file from node-5 to elastic-node-7
+  ansible.builtin.copy:
+    src: '/home/mahesh_hemke24/{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: root
+    group: elasticsearch
+    mode: '640'
+  with_items:
+    - { src: ca.crt , dest: '{{ ca }}/ca.crt' }
+    - { src: ca.key , dest: '{{ ca }}/ca.key' }
+    - { src: elastic-stack-ca.p12 , dest: '{{ certs_dir }}/elastic-stack-ca.p12' }
+    - { src: '{{ els_node_7 }}/http.p12', dest: '{{ certs_dir }}/http.p12'}
+  when: ansible_hostname[8:14]|lower == 'node-7'
 
 - name: Stop elasticsearch service on {{ ansible_hostname }}
   service:
@@ -23,7 +48,7 @@
 
 - name: Import the newly created CA certificate into the Elasticsearch truststore on {{ ansible_hostname }}
   ansible.builtin.expect:
-    command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
+    command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/ca.crt --ca-key {{ certs_dir }}/ca/ca.key
     echo: true
     responses:
       'Please enter the desired output file(.*)': ''

@@ -1,26 +1,36 @@
-### Securing Kibana
-- name: Copy http cert file to certs directory {{ ansible_hostname }}
-  ansible.builtin.copy:
-    src: '{{ certs_dir }}/http_ca.crt'
-    dest: '{{ kibana_ca }}'
-    owner: root
-    group: kibana
-    mode: '640'
-    remote_src: yes
-
 #### Creating Keys and certificates for Kibana
 - name: Check that the elastic-certificates.p12 exists
   stat:
     path: '{{ kibana_key }}'
   register: stat_result
 
-- name: Creating a key for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -nocerts -nodes -password pass:{{ elastic_pass }}  > {{ kibana_key }}
-  when: not stat_result.stat.exists
+- name: Generating certificate bundle for the Kibana server
+  ansible.builtin.expect:
+    command:  /usr/share/elasticsearch/bin/elasticsearch-certutil cert --name kibana-server --ca-cert {{ ca }}/ca.crt --ca-key {{ ca }}/ca.key  --dns {{ els_node_5 }} --ip {{ els_node_5_ip }} --pem
+    echo: true
+    responses:
+      'Please enter the desired output file(.*)': 'kibana-cert-bundle.zip'
 
-- name: Creating a Cert for Kibana
-  shell: openssl pkcs12 -in {{ certs_dir }}/elastic-certificates.p12 -clcerts -nokeys -password pass:{{ elastic_pass }} > {{ kibana_cert }}
-  when: not stat_result.stat.exists
+### Unzip the file
+- name: Unarchive a kibana-cert-bundle.zip file
+  ansible.builtin.unarchive:
+    src: '{{ els_dir }}/kibana-cert-bundle.zip'
+    dest: '{{ els_dir }}'
+    remote_src: yes
+    mode: '750'
+
+- name: Copy elasticsearch-ca.pem,cert,key file to kibana directory
+  ansible.builtin.copy:
+    src: '{{ els_dir }}/kibana-server/kibana-server.crt'
+    dest: '{{ kibana_ca }}'
+    owner: root
+    group: kibana
+    mode: '640'
+    remote_src: yes
+  with_items:
+    - { src: '{{ els_dir }}/kibana-server/kibana-server.crt' , dest: '{{ kibana_cert }}' }
+    - { src: '{{ els_dir }}/kibana-server/kibana-server.key' , dest: '{{ kibana_key }}' }
+    - { src: '{{ els_dir }}/kibana/elasticsearch-ca.pem' , dest: '{{ kibana_ca }}' }
 
 - name: Modifying kibana.yml file on kibana node {{ ansible_hostname }}
   template:
@@ -43,15 +53,3 @@
   with_items:
     - elastic
     - kibana_system
-
-### Fetching required files on Ansible controller node
-- name: Fetching cert files
-  ansible.builtin.fetch:
-    src: "{{ item }}"
-    dest: /home/mahesh_hemke24/
-    flat: true
-  with_items:
-    - '{{ ca }}/caa.crt'
-    - '{{ ca }}/caa.key'
-    - '{{ certs_dir }}/elastic-stack-ca.p12'
-    - '{{ certs_dir }}/http_ca.crt'
