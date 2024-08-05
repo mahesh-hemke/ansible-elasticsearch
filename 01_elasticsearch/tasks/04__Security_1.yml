@@ -87,7 +87,7 @@
     path: '{{ certs_dir }}/ca/ca.key'
   register: stat_result
 
-- name: Modifying elasticsearch.yml file on elastic-node-5
+- name: copy expect script on hosts
   template:
     src: templates/expect.exp
     dest: '{{ certs_dir }}/expect.exp'
@@ -109,7 +109,7 @@
     - /etc/elasticsearch/certs/http.p12
 
 ### Unzip the file
-- name: Unarchive a elastic-stack-ca.zip file
+- name: Unarchive a elasticsearch-ssl-http.zip file
   ansible.builtin.unarchive:
     src: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
     dest: '{{ els_dir }}'
