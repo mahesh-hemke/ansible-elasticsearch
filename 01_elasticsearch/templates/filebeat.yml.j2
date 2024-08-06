@@ -151,7 +151,7 @@ output.elasticsearch:
 
   # List of root certificates for HTTPS server verifications
   ssl.certificate_authorities: ["{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}"]
-
+  ssl.verification_mode: none
   # Performance preset - one of "balanced", "throughput", "scale",
   # "latency", or "custom".
   preset: balanced
