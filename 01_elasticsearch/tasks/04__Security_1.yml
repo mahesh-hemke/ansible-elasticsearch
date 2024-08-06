@@ -11,7 +11,7 @@
     path: /usr/share/elasticsearch/elastic-stack-ca.zip
   register: stat_result
 
-- name: Generate a CA certificate using the provided certificate utility
+- name: Generate a CA certificate using the els provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
     echo: true
@@ -40,48 +40,20 @@
     group: elasticsearch
     mode: '750'
 
-### Generating certificate /etc/elasticsearch/certs/ca/caa.crt and certificate authority’s private key /etc/elasticsearch/certs/ca/caa.key
-- name: Check that the elastic-certificates.p12
-  stat:
-    path: '{{ certs_dir }}/ca/caa.key'
-  register: stat_result
-
-- name: Creating certificate using openssl
-  ansible.builtin.shell: openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes -keyout {{ certs_dir }}/ca/caa.key -out {{ certs_dir }}/ca/caa.crt -subj "/CN=elastic-node-5" -addext "subjectAltName=DNS:elastic-node-6,DNS:elastic-node-7,IP:10.142.0.15,IP:10.142.0.16,IP:10.182.0.7"
-  when: not stat_result.stat.exists
-
-### Changing ownership , group and permissions of genearted files
-- name: Change file ownership, group and permissions
-  ansible.builtin.file:
-    path: '{{ item }}'
-    owner: root
-    group: elasticsearch
-    mode: '640'
-  with_items:
-    - '{{ certs_dir }}/ca/caa.key'
-    - '{{ certs_dir }}/ca/caa.crt'
-
 ### Importing the newly created CA certificate into the Elasticsearch truststore. 
 ### This step ensures that elasticsearch cluster trusts the new CA certificate.
 - name: Check if aliase is present
-  ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -list | grep -i new-caa |cut -d',' -f1
+  ansible.builtin.shell: keytool -keystore /etc/elasticsearch/certs/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias els-caa -list | grep -i els-caa |cut -d',' -f1
   register: aliase
 
 - name: Import the newly created CA certificate into the Elasticsearch truststore
-  ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias new-caa -file {{ certs_dir }}/ca/caa.crt
-  when: aliase.stdout != "new-caa"
+  ansible.builtin.shell: /usr/share/elasticsearch/jdk/bin/keytool -importcert -trustcacerts -noprompt -keystore {{ certs_dir }}/elastic-stack-ca.p12 -storepass {{ elastic_pass }} -alias els-caa -file {{ certs_dir }}/ca/ca.crt
+  when: aliase.stdout != "els-caa"
   ignore_errors: true
 
 - name: Storing default http keystore password
   command: /usr/share/elasticsearch/bin/elasticsearch-keystore show xpack.security.http.ssl.keystore.secure_password
   register: http_pass
-
-- name: Change file ownership, group and permissions
-  ansible.builtin.file:
-    path: '{{ certs_dir }}/elastic-stack-ca.p12' 
-    owner: root
-    group: elasticsearch
-    mode: '640'
 
 ###2: Generate a new certificate for the transport layer
 - name: Check that the elastic-certificates.p12 exists
@@ -91,7 +63,7 @@
 
 - name: Import the newly created CA certificate into the Elasticsearch truststore
   ansible.builtin.expect:
-    command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/caa.crt --ca-key {{ certs_dir }}/ca/caa.key
+    command: /usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca-cert {{ certs_dir }}/ca/ca.crt --ca-key {{ certs_dir }}/ca/ca.key
     echo: true
     responses:
       'Please enter the desired output file(.*)': ''
@@ -109,7 +81,76 @@
     mode: '640'
     remote_src: yes
 
-### Removing the default ketstore values
+###3: Generate new certificate(s) for the HTTP layer
+- name: Check that the elastic-certificates.p12
+  stat:
+    path: '{{ certs_dir }}/ca/ca.key'
+  register: stat_result
+
+- name: Copy expect script on hosts
+  template:
+    src: templates/expect.exp
+    dest: '{{ certs_dir }}/expect.exp'
+
+- name: Check that the elasticsearch-ssl-http.zip on {{ ansible_hostname }}
+  stat:
+    path: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
+  register: stat_result
+  
+- name: Execute expect script to generate certificate for http layer
+  ansible.builtin.shell: /usr/bin/expect {{ certs_dir }}/expect.exp
+  when: not stat_result.stat.exists
+
+- name: Remove old http.p12
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/elasticsearch/certs/http.p12
+
+### Unzip the elasticsearch-ssl-http.zip file
+- name: Unarchive a elasticsearch-ssl-http.zip file
+  ansible.builtin.unarchive:
+    src: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
+    dest: '{{ els_dir }}'
+    remote_src: yes
+    owner: root
+    group: elasticsearch
+    mode: '750'
+
+- name: Copy http.p12 file to certs directory
+  ansible.builtin.copy:
+    src: '{{ els_dir }}/elasticsearch/{{ els_node_5 }}/http.p12'
+    dest: '{{ http_keystore }}'
+    owner: root
+    group: elasticsearch
+    mode: '640'
+    remote_src: yes
+
+
+#### Creating Keys and certificates for FileBeat
+- name: Check that the elastic-certificates.p12 exists
+  stat:
+    path: '{{ filebeat_zip }}'
+  register: stat_result
+
+- name: Generating certificate bundle for the Kibana server
+  ansible.builtin.expect:
+    command:  /usr/share/elasticsearch/bin/elasticsearch-certutil cert --name filebeat-server --ca-cert {{ ca }}/ca.crt --ca-key {{ ca }}/ca.key  --dns {{ ngx_node }} --ip {{ ngx_node_ip }} --pem
+    echo: true
+    responses:
+      'Please enter the desired output file(.*)': 'filebeat-cert-bundle.zip'
+  when: not stat_result.stat.exists
+
+### Unzip the filebeat-cert-bundle.zip file
+- name: Unarchive a filebeat-cert-bundle.zip file
+  ansible.builtin.unarchive:
+    src: '{{ els_dir }}/filebeat-cert-bundle.zip'
+    dest: '{{ els_dir }}'
+    remote_src: yes
+    mode: '750'
+
+### Removing the default keystore values
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -117,8 +158,9 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+    - xpack.security.http.ssl.keystore.secure_password
 
-### Adding the ketstore values with latest update
+### Adding the ketstore values with latest password
 - name: Adding the keystore values for the transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -126,10 +168,22 @@
   with_items:
     - xpack.security.transport.ssl.keystore.secure_password
     - xpack.security.transport.ssl.truststore.secure_password
+    - xpack.security.http.ssl.keystore.secure_password
   notify: 
     - els_restart
 
-#### Modyfying the elasticsearch.yml with proper configurations
+- name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: '{{ item }}' 
+    owner: root
+    recurse: yes
+    group: elasticsearch
+    mode: '750'
+  with_items:
+    - { '{{ certs_dir }}' }
+    - { '{{ ca }}' }
+
+#### Modifying the elasticsearch.yml with proper configurations on 1st node
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
     src: templates/els_node.j2
@@ -140,14 +194,18 @@
 - name: Flush the handlers
   ansible.builtin.meta: flush_handlers
 
-### Fetching required files on Ansible controller node
+### Fetching required files on Ansible Controller node
 - name: Fetching cert files
   ansible.builtin.fetch:
-    src: "{{ item }}"
-    dest: /home/mahesh_hemke24/
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     flat: true
   with_items:
-    - '{{ ca }}/caa.crt'
-    - '{{ ca }}/caa.key'
-    - '{{ certs_dir }}/elastic-stack-ca.p12'
-    - '{{ certs_dir }}/http_ca.crt'
+    - { src: '{{ ca }}/ca.crt' , dest: '{{ home }}' }
+    - { src: '{{ ca }}/ca.key' , dest: '{{ home }}' } 
+    - { src: '{{ transport_truststore }}' , dest: '{{ home }}' }
+    - { src: '{{ certs_dir }}/http_ca.crt' , dest: '{{ home }}' }
+    - { src: '{{ els_dir2 }}/{{ els_node_6 }}/http.p12' , dest: '{{ home }}/{{ els_node_6 }}/' }
+    - { src: '{{ els_dir2 }}/{{ els_node_7 }}/http.p12' , dest: '{{ home }}/{{ els_node_7 }}/' }
+    - { src: '{{ els_dir }}/filebeat-server/filebeat-server.crt' , dest: '{{ home }}' }
+    - { src: '{{ els_dir }}/filebeat-server/filebeat-server.key' , dest: '{{ home }}' } 

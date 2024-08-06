@@ -1,23 +1,37 @@
 ---
-# # Certificate and keys for ElasticSearch
-transport_truststore: certs/elastic-stack-ca.p12
-transport_keystore: certs/elastic-certificates.p12
+## Certificate and keys for ELS
+transport_truststore: /etc/elasticsearch/certs/elastic-stack-ca.p12
+transport_keystore: /etc/elasticsearch/certs/elastic-certificates.p12
 http_keystore: /etc/elasticsearch/certs/http.p12
+
+### Directories for ELS
+els_dir2: /usr/share/elasticsearch/elasticsearch
 certs_dir: /etc/elasticsearch/certs
-els_cert: /etc/elasticsearch/certs/elastic-certificates.p12
+els_dir: /usr/share/elasticsearch/
 ca: /etc/elasticsearch/certs/ca
 
-# Certificate and keys for Kibana
-kibana_cert: /etc/kibana/kibana_cert.cer
-kibana_key: /etc/kibana/kibana_key.key
-kibana_ca: /etc/kibana/http_ca.crt
+## home directory of ansible controller node
+home: /home/mahesh_hemke24/
 
-### Nginx and Filebeat Certs. keys
-ngx_certs_dir: /etc/pki/nginx
+# Certificate and keys for Kibana
+kibana_zip: /usr/share/elasticsearch/kibana-cert-bundle.zip
+kibana_cert: /etc/kibana/kibana-server.crt
+kibana_key: /etc/kibana/kibana-server.key
+kibana_ca: /etc/kibana/elasticsearch-ca.pem
+
+### Filebeat Certs. keys
+filebeat_zip: /usr/share/elasticsearch/filebeat-cert-bundle.zip
+filebeat_key: filebeat-server.key
+filebeat_crt: filebeat-server.crt
+filebeat_ca: filebeat_ca.crt
+
+### Nginx Certs keys
 ngx_key_dir: /etc/pki/nginx/private
+ngx_certs_dir: /etc/pki/nginx
+ngx_els_ca_crt: http_ca.crt
 ngx_key: nginx_server.key
 ngx_crt: nginx_server.crt
-ngx_els_ca_crt: http_ca.crt
+
 ## Cluster name of elasticsearch
 cluster_name: dev-cluster
 
@@ -39,25 +53,29 @@ kibana_user: kibana_system
 ### Encrypted Password
 elastic_pass: !vault |
           $ANSIBLE_VAULT;1.1;AES256
-          30383064363939363635663361366534363034376631373163623437303466393937616561636362
-          3364363933303865303164633063313636613535306531300a326335366563343034633662643262
-          61306336323961316163656130656630626138626433663163346432363536393234666331313433
-          6662646164343466630a663435393966393366643138663536363464356665356133363236333531
-          33653565373433313335353435323133356436353665376465356533313832646130
+          64663933643336626631653731323033646664363235386337376361333134653533666239383132
+          3138303166616636626534333233633064613930343864650a336262646630336662613731316533
+          33323438346666386536356133613230643936626132313561626565303136303361343534323438
+          3162383131626130330a393238666666666339656437353131633261323439343633353537633062
+          62376432366465663336326462656539316261393233663634363365633262636235
 
-### Hostnames of all elasticsearch nodes
+### Hostnames of all ELS nodes
 els_node_5: elastic-node-5
 els_node_6: elastic-node-6
 els_node_7: elastic-node-7
-ngx_node: elastic-node-1
 
 ### Hostnames of all kibana nodes
 kibana_node_5: elastic-node-5
 
-### IP Addresses of all elasticsearch nodes
-els_node_5_ip: 10.142.0.15
+### Hostname of Nginx and Filebeat node
+ngx_node: elastic-node-1
+
+### IP Addresses of all ELS nodes
+els_node_5_ip: 10.142.0.15    ## This is Kibana and ELS node
 els_node_6_ip: 10.142.0.16
 els_node_7_ip: 10.182.0.7
+
+### Filebeat and Nginx node
 ngx_node_ip: 10.142.0.11
 
 packages:

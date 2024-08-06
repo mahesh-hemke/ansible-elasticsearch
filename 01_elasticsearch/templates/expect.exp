@@ -1,0 +1,109 @@
+#!/usr/bin/expect
+
+# Define lists for hostnames and IPs
+set hostnames [list "elastic-node-5" "elastic-node-6" "elastic-node-7\r"]
+set ips [list "10.142.0.15" "10.142.0.16" "10.182.0.7\r"]
+set timeout 1
+spawn /usr/share/elasticsearch/bin/elasticsearch-certutil http
+
+expect "## Do you wish to generate a Certificate Signing Request(.*)" 
+send "N\r"
+
+expect "## Do you have an existing Certificate Authority(.*)" 
+send "y\r"
+
+expect "## What is the path to your CA(.*)" 
+send "/etc/elasticsearch/certs/ca/ca.crt\r"
+
+expect "## What is the path to your CA key(.*)"
+send "/etc/elasticsearch/certs/ca/ca.key\r"
+
+expect "## How long should your certificates be valid(.*)"
+send "\r"
+
+expect "## Do you wish to generate one certificate per node(.*)"
+send "y\r"
+
+expect "## What is the name of node #1(.*)"
+send "elastic-node-5\r"
+
+expect "## Which hostnames will be used to connect to elastic-node-1(.*)" 
+foreach hostname $hostnames {
+    send "$hostname\r"
+}
+
+expect "Is this correct(.*)"
+send "y\r"
+
+expect "## Which IP addresses will be used to connect to elastic-node-1(.*)"
+foreach ip $ips {
+    send "$ip\r"
+}
+  
+expect "Is this correct(.*)"
+send "y\r"
+  
+expect "Do you wish to change any of these options(.*)"
+send "N\r"
+ 
+expect "Generate additional certificates(.*)"
+send "y\r"
+
+expect "## What is the name of node #2(.*)"
+send "elastic-node-6\r"
+
+expect "## Which hostnames will be used to connect to elastic-node-2(.*)" 
+foreach hostname $hostnames {
+    send "$hostname\r"
+}
+  
+expect "Is this correct(.*)"
+send "y\r"
+  
+expect "## Which IP addresses will be used to connect to elastic-node-2(.*)" 
+foreach ip $ips {
+    send "$ip\r"
+}
+
+expect "Is this correct(.*)" 
+send "y\r"
+
+expect "Do you wish to change any of these options(.*)" 
+send "N\r"
+
+expect "Generate additional certificates(.*)"
+send "y\r"
+expect "## What is the name of node #2(.*)"
+send "elastic-node-7\r"
+
+expect "## Which hostnames will be used to connect to elastic-node-3(.*)" 
+foreach hostname $hostnames {
+    send "$hostname\r"
+}
+  
+expect "Is this correct(.*)"
+send "y\r"
+  
+expect "## Which IP addresses will be used to connect to elastic-node-3(.*)" 
+foreach ip $ips {
+    send "$ip\r"
+}
+
+expect "Is this correct(.*)"
+send "y\r"
+expect "Do you wish to change any of these options(.*)"
+send "N\r"    
+
+expect "Generate additional certificates(.*)" 
+send "N\r"
+
+expect "## What password do you want for your private key(s)(.*)"
+send "7rtd5TygyppFzyaEeDSV\r"
+
+expect "Repeat password to confirm(.*)" 
+send "7rtd5TygyppFzyaEeDSV\r"
+
+expect "## Where should we save the generated files(.*)" 
+send "/etc/elasticsearch/certs/elasticsearch-ssl-http.zip\r"
+
+expect eof
