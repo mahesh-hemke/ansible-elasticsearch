@@ -12,7 +12,7 @@
       'Please enter the desired output file(.*)': 'kibana-cert-bundle.zip'
   when: not stat_result.stat.exists
 
-### Unzip the file
+### Unzip the kibana-cert-bundle.zip file
 - name: Unarchive a kibana-cert-bundle.zip file
   ansible.builtin.unarchive:
     src: '{{ els_dir }}/kibana-cert-bundle.zip'
@@ -33,6 +33,7 @@
     - { src: '{{ els_dir }}/kibana-server/kibana-server.key' , dest: '{{ kibana_key }}' }
     - { src: '{{ els_dir }}/kibana/elasticsearch-ca.pem' , dest: '{{ kibana_ca }}' }
 
+### Modifying the kibana.yml file with proper configurations on kibana node
 - name: Modifying kibana.yml file on kibana node {{ ansible_hostname }}
   template:
     src: templates/kibana.j2

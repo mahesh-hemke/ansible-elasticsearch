@@ -11,7 +11,7 @@
     path: /usr/share/elasticsearch/elastic-stack-ca.zip
   register: stat_result
 
-- name: Generate a CA certificate using the provided certificate utility
+- name: Generate a CA certificate using the els provided certificate utility
   ansible.builtin.expect:
     command: /usr/share/elasticsearch/bin/elasticsearch-certutil ca -pem
     echo: true
@@ -87,7 +87,7 @@
     path: '{{ certs_dir }}/ca/ca.key'
   register: stat_result
 
-- name: copy expect script on hosts
+- name: Copy expect script on hosts
   template:
     src: templates/expect.exp
     dest: '{{ certs_dir }}/expect.exp'
@@ -108,7 +108,7 @@
   with_items:
     - /etc/elasticsearch/certs/http.p12
 
-### Unzip the file
+### Unzip the elasticsearch-ssl-http.zip file
 - name: Unarchive a elasticsearch-ssl-http.zip file
   ansible.builtin.unarchive:
     src: '{{ certs_dir }}/elasticsearch-ssl-http.zip'
@@ -142,7 +142,7 @@
       'Please enter the desired output file(.*)': 'filebeat-cert-bundle.zip'
   when: not stat_result.stat.exists
 
-### Unzip the file
+### Unzip the filebeat-cert-bundle.zip file
 - name: Unarchive a filebeat-cert-bundle.zip file
   ansible.builtin.unarchive:
     src: '{{ els_dir }}/filebeat-cert-bundle.zip'
@@ -150,8 +150,7 @@
     remote_src: yes
     mode: '750'
 
-
-### Removing the default ketstore values
+### Removing the default keystore values
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -161,7 +160,7 @@
     - xpack.security.transport.ssl.truststore.secure_password
     - xpack.security.http.ssl.keystore.secure_password
 
-### Adding the ketstore values with latest update
+### Adding the ketstore values with latest password
 - name: Adding the keystore values for the transport keystore and truststore
   community.elastic.elastic_keystore:
     name: '{{ item }}'
@@ -184,7 +183,7 @@
     - { '{{ certs_dir }}' }
     - { '{{ ca }}' }
 
-#### Modyfying the elasticsearch.yml with proper configurations
+#### Modifying the elasticsearch.yml with proper configurations on 1st node
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
     src: templates/els_node.j2
@@ -195,7 +194,7 @@
 - name: Flush the handlers
   ansible.builtin.meta: flush_handlers
 
-### Fetching required files on Ansible controller node
+### Fetching required files on Ansible Controller node
 - name: Fetching cert files
   ansible.builtin.fetch:
     src: "{{ item.src }}"

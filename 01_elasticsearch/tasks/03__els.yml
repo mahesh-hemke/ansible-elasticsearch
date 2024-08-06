@@ -1,4 +1,4 @@
-- name: Install Elasticsearch on all elastic nodes
+- name: Install the required packages on all ELS nodes
   yum:
     name: '{{ item }}'
     state: present

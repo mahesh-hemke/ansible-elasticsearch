@@ -5,7 +5,8 @@
   with_items:
     - filebeat
 
-- name: enable system module on filebeat server on {{ ansible_hostname }}
+### To enable the system module on filebeat to send the systems log to the ELS nodes
+- name: Enable system module on filebeat server on {{ ansible_hostname }}
   shell: filebeat modules enable system
 
 - name: Creating cert directory on {{ ansible_hostname }}
@@ -34,6 +35,7 @@
     - { src: filebeat-server.key , dest: '{{ ngx_key_dir }}/{{ filebeat_key }}' }
     - { src: http_ca.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}' }
 
+### Modifying the filebeat.yml and system.yml file with proper configurations
 - name: Modifying filebeat module file and yml file on {{ ansible_hostname }}
   template:
     src: templates/{{ item.src }}
