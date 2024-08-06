@@ -5,7 +5,7 @@
 - include_tasks: 02__etchosts.yml                             #### Adding hosts entries of other nodes
 - include_tasks: 03__els.yml                                  #### Installation of Elasticsearch,Kibana with other pkg
   when: ansible_hostname[8:14]|lower != 'node-1'      
-- include_tasks: 04__security_1.yml                           #### Securing and configuring 1st elastic node
+- include_tasks: 04__Security_1.yml                           #### Securing and configuring 1st elastic node
   when: ansible_hostname[8:14]|lower == 'node-5'      
 - include_tasks: 05__Security_2.yml                           #### Securing and configuring remaining elastic nodes
   when: ansible_hostname[8:14]|lower == 'node-6'    
