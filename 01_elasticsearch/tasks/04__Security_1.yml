@@ -127,6 +127,30 @@
     mode: '640'
     remote_src: yes
 
+
+#### Creating Keys and certificates for FileBeat
+- name: Check that the elastic-certificates.p12 exists
+  stat:
+    path: '{{ filebeat_zip }}'
+  register: stat_result
+
+- name: Generating certificate bundle for the Kibana server
+  ansible.builtin.expect:
+    command:  /usr/share/elasticsearch/bin/elasticsearch-certutil cert --name filebeat-server --ca-cert {{ ca }}/ca.crt --ca-key {{ ca }}/ca.key  --dns {{ ngx_node }} --ip {{ ngx_node_ip }} --pem
+    echo: true
+    responses:
+      'Please enter the desired output file(.*)': 'filebeat-cert-bundle.zip'
+  when: not stat_result.stat.exists
+
+### Unzip the file
+- name: Unarchive a filebeat-cert-bundle.zip file
+  ansible.builtin.unarchive:
+    src: '{{ els_dir }}/filebeat-cert-bundle.zip'
+    dest: '{{ els_dir }}'
+    remote_src: yes
+    mode: '750'
+
+
 ### Removing the default ketstore values
 - name: Remove the existing keystore values for the default transport keystore and truststore
   community.elastic.elastic_keystore:
@@ -183,4 +207,6 @@
     - { src: '{{ transport_truststore }}' , dest: '{{ home }}' }
     - { src: '{{ certs_dir }}/http_ca.crt' , dest: '{{ home }}' }
     - { src: '{{ els_dir2 }}/{{ els_node_6 }}/http.p12' , dest: '{{ home }}/{{ els_node_6 }}/' }
-    - { src: '{{ els_dir2 }}/{{ els_node_7 }}/http.p12' , dest: '{{ home }}/{{ els_node_7 }}/' } 
+    - { src: '{{ els_dir2 }}/{{ els_node_7 }}/http.p12' , dest: '{{ home }}/{{ els_node_7 }}/' }
+    - { src: '{{ els_dir }}/filebeat-server/filebeat-server.crt' , dest: '{{ home }}' }
+    - { src: '{{ els_dir }}/filebeat-server/filebeat-server.key' , dest: '{{ home }}' } 

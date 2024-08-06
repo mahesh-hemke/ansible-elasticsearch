@@ -29,6 +29,9 @@
   with_items:
     - { src: ca.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_crt }}' }
     - { src: ca.key , dest: '{{ ngx_key_dir }}/{{ ngx_key }}' }
+    - { src: ca.crt , dest: '{{ ngx_certs_dir }}/{{ filebeat_ca }}' }
+    - { src: filebeat-server.crt , dest: '{{ ngx_certs_dir }}/{{ filebeat_crt }}' }
+    - { src: filebeat-server.key , dest: '{{ ngx_key_dir }}/{{ filebeat_key }}' }
     - { src: http_ca.crt , dest: '{{ ngx_certs_dir }}/{{ ngx_els_ca_crt }}' }
 
 - name: Modifying filebeat module file and yml file on {{ ansible_hostname }}

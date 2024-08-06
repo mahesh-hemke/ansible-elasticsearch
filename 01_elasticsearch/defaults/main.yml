@@ -10,6 +10,7 @@ els_dir2: /usr/share/elasticsearch/elasticsearch
 ca: /etc/elasticsearch/certs/ca
 home: /home/mahesh_hemke24/
 kibana_zip: /usr/share/elasticsearch/kibana-cert-bundle.zip
+filebeat_zip: /usr/share/elasticsearch/filebeat-cert-bundle.zip
 # Certificate and keys for Kibana
 kibana_cert: /etc/kibana/kibana-server.crt
 kibana_key: /etc/kibana/kibana-server.key
@@ -20,6 +21,9 @@ ngx_certs_dir: /etc/pki/nginx
 ngx_key_dir: /etc/pki/nginx/private
 ngx_key: nginx_server.key
 ngx_crt: nginx_server.crt
+filebeat_key: filebeat-server.key
+filebeat_crt: filebeat-server.crt
+filebeat_ca: filebeat_ca.crt
 ngx_els_ca_crt: http_ca.crt
 ## Cluster name of elasticsearch
 cluster_name: dev-cluster
