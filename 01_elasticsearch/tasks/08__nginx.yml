@@ -14,7 +14,7 @@
     responses:
       'New password(.*)': '{{ elastic_pass }}'
       'Re-type new password(.*)': '{{ elastic_pass }}'
-  with_item:
+  with_items:
     - htpasswd -c /etc/nginx/conf.d/elastic_credentials elastic
     - htpasswd /etc/nginx/conf.d/elastic_credentials kibana_system
   ignore_errors: true
