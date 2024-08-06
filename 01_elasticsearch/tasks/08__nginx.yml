@@ -9,7 +9,7 @@
 ### Creating password for els and kibana user to authenticate it to ELS and Kibana Node
 - name: Creating secure passwd for elastic and kibana user to store in nginx conf file on {{ ansible_hostname }}
   ansible.builtin.expect:
-    command: 
+    command: '{{ item }}'
     echo: true
     responses:
       'New password(.*)': '{{ elastic_pass }}'
