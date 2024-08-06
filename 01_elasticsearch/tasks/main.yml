@@ -7,9 +7,9 @@
   when: ansible_hostname[8:14]|lower != 'node-1'      
 - include_tasks: 04__security_1.yml                           #### Securing and configuring 1st elastic node
   when: ansible_hostname[8:14]|lower == 'node-5'      
-- include_tasks: 05__security_2.yml                           #### Securing and configuring remaining elastic nodes
+- include_tasks: 05__Security_2.yml                           #### Securing and configuring remaining elastic nodes
   when: ansible_hostname[8:14]|lower == 'node-6'    
-- include_tasks: 05__security_2.yml                           #### Securing and configuring remaining elastic nodes
+- include_tasks: 05__Security_2.yml                           #### Securing and configuring remaining elastic nodes
   when: ansible_hostname[8:14]|lower == 'node-7'    
 - include_tasks: 06__kibana.yml                               #### Securing and configuring kibana node
   when: ansible_hostname[8:14]|lower == 'node-5'
