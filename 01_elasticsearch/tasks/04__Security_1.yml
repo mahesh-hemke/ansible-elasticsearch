@@ -172,17 +172,6 @@
   notify: 
     - els_restart
 
-- name: Change file ownership, group and permissions
-  ansible.builtin.file:
-    path: '{{ item }}' 
-    owner: root
-    recurse: yes
-    group: elasticsearch
-    mode: '750'
-  with_items:
-    - { '{{ certs_dir }}' }
-    - { '{{ ca }}' }
-
 #### Modifying the elasticsearch.yml with proper configurations on 1st node
 - name: Modifying elasticsearch.yml file on elastic-node-5
   template:
