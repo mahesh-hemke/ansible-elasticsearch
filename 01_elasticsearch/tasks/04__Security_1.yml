@@ -117,6 +117,7 @@
     owner: root
     group: elasticsearch
     mode: '750'
+  ignore_errors: true
 
 - name: Copy http.p12 file to certs directory
   ansible.builtin.copy:
