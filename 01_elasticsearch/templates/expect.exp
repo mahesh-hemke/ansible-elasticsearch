@@ -2,7 +2,7 @@
 
 # Define lists for hostnames and IPs
 set hostnames [list "elastic-node-5" "elastic-node-6" "elastic-node-7\r"]
-set ips [list "10.142.0.15" "10.142.0.16" "10.182.0.7\r"]
+set ips [list "10.142.0.15" "10.142.0.16" "10.142.0.7\r"]
 set timeout 1
 spawn /usr/share/elasticsearch/bin/elasticsearch-certutil http
 
