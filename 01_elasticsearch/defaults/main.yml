@@ -11,7 +11,7 @@ els_dir: /usr/share/elasticsearch/
 ca: /etc/elasticsearch/certs/ca
 
 ## home directory of ansible controller node
-home: /home/mahesh_hemke24/
+home: /home/mahesh24195/
 
 # Certificate and keys for Kibana
 kibana_zip: /usr/share/elasticsearch/kibana-cert-bundle.zip
@@ -51,7 +51,7 @@ elastic_user: elastic
 kibana_user: kibana_system
 
 ### Encrypted Password
-elastic_pass: !vault |
+elastic_pass1: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           64663933643336626631653731323033646664363235386337376361333134653533666239383132
           3138303166616636626534333233633064613930343864650a336262646630336662613731316533
@@ -77,6 +77,8 @@ els_node_7_ip: 10.142.0.7  ###10.182.0.7
 
 ### Filebeat and Nginx node
 ngx_node_ip: 10.142.0.11
+
+elastic_pass: 7rtd5TygyppFzyaEeDSV
 
 packages:
     - elasticsearch

@@ -22,7 +22,7 @@
   
 - name: Copy cert file for nginx and filebeat on {{ ansible_hostname }}
   ansible.builtin.copy:
-    src: '/home/mahesh_hemke24/{{ item.src }}'
+    src: '/home/mahesh24195/{{ item.src }}'
     dest: '{{ item.dest }}'
     owner: root
     group: root

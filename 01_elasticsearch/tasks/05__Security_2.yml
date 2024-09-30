@@ -11,7 +11,7 @@
 ### Copying required certs,keys file to other ELS nodes which were generated on 1st ELS node
 - name: Copy cert file from node-5 to elastic-node-6
   ansible.builtin.copy:
-    src: '/home/mahesh_hemke24/{{ item.src }}'
+    src: '/home/mahesh24195/{{ item.src }}'
     dest: '{{ item.dest }}'
     owner: root
     group: elasticsearch
@@ -25,7 +25,7 @@
 
 - name: Copy cert file from node-5 to elastic-node-7
   ansible.builtin.copy:
-    src: '/home/mahesh_hemke24/{{ item.src }}'
+    src: '/home/mahesh24195/{{ item.src }}'
     dest: '{{ item.dest }}'
     owner: root
     group: elasticsearch
