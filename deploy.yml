@@ -2,6 +2,6 @@
   hosts: all
   become: yes
   gather_facts: true
-  remote_user: mahesh_hemke24
+  remote_user: mahesh24195
   roles:
     - 01_elasticsearch
