@@ -73,7 +73,7 @@ ngx_node: elastic-node-1
 ### IP Addresses of all ELS nodes
 els_node_5_ip: 10.142.0.15    ## This is Kibana and ELS node
 els_node_6_ip: 10.142.0.16
-els_node_7_ip: 10.182.0.7
+els_node_7_ip: 10.142.0.7  ###10.182.0.7
 
 ### Filebeat and Nginx node
 ngx_node_ip: 10.142.0.11
