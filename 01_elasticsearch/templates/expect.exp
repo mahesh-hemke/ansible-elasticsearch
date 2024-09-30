@@ -73,6 +73,7 @@ send "N\r"
 
 expect "Generate additional certificates(.*)"
 send "y\r"
+
 expect "## What is the name of node #2(.*)"
 send "elastic-node-7\r"
 
@@ -91,6 +92,7 @@ foreach ip $ips {
 
 expect "Is this correct(.*)"
 send "y\r"
+
 expect "Do you wish to change any of these options(.*)"
 send "N\r"    
 
