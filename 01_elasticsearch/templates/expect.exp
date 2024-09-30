@@ -27,7 +27,7 @@ send "y\r"
 expect "## What is the name of node #1(.*)"
 send "elastic-node-5\r"
 
-expect "## Which hostnames will be used to connect to elastic-node-1(.*)" 
+expect "## Which hostnames will be used to connect to elastic-node-5(.*)" 
 foreach hostname $hostnames {
     send "$hostname\r"
 }
@@ -35,7 +35,7 @@ foreach hostname $hostnames {
 expect "Is this correct(.*)"
 send "y\r"
 
-expect "## Which IP addresses will be used to connect to elastic-node-1(.*)"
+expect "## Which IP addresses will be used to connect to elastic-node-5(.*)"
 foreach ip $ips {
     send "$ip\r"
 }
@@ -52,7 +52,7 @@ send "y\r"
 expect "## What is the name of node #2(.*)"
 send "elastic-node-6\r"
 
-expect "## Which hostnames will be used to connect to elastic-node-2(.*)" 
+expect "## Which hostnames will be used to connect to elastic-node-6(.*)" 
 foreach hostname $hostnames {
     send "$hostname\r"
 }
@@ -60,7 +60,7 @@ foreach hostname $hostnames {
 expect "Is this correct(.*)"
 send "y\r"
   
-expect "## Which IP addresses will be used to connect to elastic-node-2(.*)" 
+expect "## Which IP addresses will be used to connect to elastic-node-6(.*)" 
 foreach ip $ips {
     send "$ip\r"
 }
@@ -76,7 +76,7 @@ send "y\r"
 expect "## What is the name of node #2(.*)"
 send "elastic-node-7\r"
 
-expect "## Which hostnames will be used to connect to elastic-node-3(.*)" 
+expect "## Which hostnames will be used to connect to elastic-node-7(.*)" 
 foreach hostname $hostnames {
     send "$hostname\r"
 }
@@ -84,7 +84,7 @@ foreach hostname $hostnames {
 expect "Is this correct(.*)"
 send "y\r"
   
-expect "## Which IP addresses will be used to connect to elastic-node-3(.*)" 
+expect "## Which IP addresses will be used to connect to elastic-node-7(.*)" 
 foreach ip $ips {
     send "$ip\r"
 }
